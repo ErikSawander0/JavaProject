@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Restaurant Menu</title>
+</h:head>
+<h:body>
+    <h1>Our Menu</h1>
+
+    <ui:repeat value="#{menuBean.menuItems}" var="item">
+        <div>
+            <strong>#{item.name}</strong> - $#{item.price}
+            <br/>
+            #{item.description}
+            <br/>
+            ID: #{item.id}
+            <br/>
+            <ui:fragment rendered="#{item.isVegan}">
+                ✓ Vegan
+                <br/>
+            </ui:fragment>
+            <ui:fragment rendered="#{item.isGlutenFree}">
+                ✓ Gluten-Free
+                <br/>
+            </ui:fragment>
+            <ui:fragment rendered="#{not empty item.allergens}">
+                Allergens: #{item.allergens}
+                <br/>
+            </ui:fragment>
+        </div>
+        <hr/>
+    </ui:repeat>
+
+    <!-- If no items -->
+    <h:outputText value="No menu items available."
+                  rendered="#{empty menuBean.menuItems}"/>
+
+</h:body>
+</html>
