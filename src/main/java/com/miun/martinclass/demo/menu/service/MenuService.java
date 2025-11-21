@@ -2,8 +2,7 @@ package com.miun.martinclass.demo.menu.service;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
 import com.miun.martinclass.demo.menu.entity.DailyMenu;
 import jakarta.ejb.Stateless;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,8 +12,9 @@ import java.util.List;
 @Stateless
 public class MenuService {
 
-    //@PersistenceContext(unitName = "menuPU")
-    private EntityManager em;
+    private static final EntityManagerFactory FACTORY = Persistence.createEntityManagerFactory("menuPU");
+    @PersistenceContext(unitName = "menuPU")
+    private final EntityManager em = FACTORY.createEntityManager();
 
     // ========== MenuItem CRUD ==========
 
@@ -22,7 +22,7 @@ public class MenuService {
      * Get all menu items in the catalog
      */
     public List<MenuItem> getAllMenuItems() {
-        return null;
+        return em.createQuery("select t from MenuItem t", MenuItem.class).getResultList();
     }
 
     /**
@@ -36,7 +36,7 @@ public class MenuService {
      * Create a new menu item
      */
     public void createMenuItem(MenuItem item) {
-
+        em.persist(item);
     }
 
     /**
