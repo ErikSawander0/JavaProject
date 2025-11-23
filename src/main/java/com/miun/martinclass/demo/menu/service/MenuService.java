@@ -4,6 +4,7 @@ import com.miun.martinclass.demo.menu.entity.DailyMenu;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ import java.util.List;
 @Stateless
 public class MenuService {
 
-    //@PersistenceContext(unitName = "menuPU")
+    @PersistenceContext(unitName = "default")
     private EntityManager em;
 
     // ========== MenuItem CRUD ==========
@@ -22,46 +23,49 @@ public class MenuService {
      * Get all menu items in the catalog
      */
     public List<MenuItem> getAllMenuItems() {
-        return null;
+        return em.createQuery("SELECT m FROM MenuItem m", MenuItem.class).getResultList();
     }
 
     /**
      * Find a specific menu item by ID
      */
     public MenuItem findMenuItemById(Long id) {
-        return null;
+        return em.find(MenuItem.class, id);
     }
 
     /**
      * Create a new menu item
      */
     public void createMenuItem(MenuItem item) {
-
+        em.persist(item);
     }
 
     /**
      * Update an existing menu item
      */
     public void updateMenuItem(MenuItem item) {
-
+        em.merge(item);
     }
 
     /**
      * Delete a menu item
      */
     public void deleteMenuItem(Long id) {
-
+        MenuItem item = em.find(MenuItem.class, id);
+        if(item != null) {
+            em.remove(item);
+        }
     }
 
     /**
      * Find menu items by dietary restrictions
      */
     public List<MenuItem> findVeganItems() {
-        return null;
+        return em.createQuery("Select m from MenuItem m WHERE m.isVegan", MenuItem.class).getResultList();
     }
 
     public List<MenuItem> findGlutenFreeItems() {
-        return null;
+        return em.createQuery("SELECT m FROM MenuItem m WHERE m.isGlutenFree = true", MenuItem.class).getResultList();
     }
 
     // ========== WeeklyMenu CRUD ==========
@@ -70,35 +74,38 @@ public class MenuService {
      * Get all weekly menus
      */
     public List<DailyMenu> getAllDailyMenus() {
-        return null;
+        return em.createQuery("SELECT d FROM DailyMenu d ORDER BY d.Date DESC", DailyMenu.class).getResultList();
     }
 
     /**
      * Find a specific daily menu by ID
      */
     public DailyMenu findDailyMenuById(Long id) {
-        return null;
+        return em.find(DailyMenu.class, id);
     }
 
     /**
      * Create a new daily menu
      */
     public void createDailyMenu(DailyMenu menu) {
-
+        em.persist(menu);
     }
 
     /**
      * Update an existing daily menu
      */
     public void updateDailyMenu(DailyMenu menu) {
-
+        em.merge(menu);
     }
 
     /**
      * Delete a daily menu
      */
     public void deleteDailyMenu(Long id) {
-
+        DailyMenu item = em.find(DailyMenu.class, id);
+        if(item != null) {
+            em.remove(item);
+        }
     }
 
     // ========== Key Query Methods ==========
@@ -107,6 +114,7 @@ public class MenuService {
      * Get the current active daily menu (most important!)
      */
     public DailyMenu getTodaysMenu() {
+        /*
         // Create a dummy DailyMenu for testing
         DailyMenu menu = new DailyMenu();
         menu.setId(1L);
@@ -158,27 +166,44 @@ public class MenuService {
         // Set the items in the menu
         menu.setMenuItems(items);
 
-        return menu;
+        return menu;*/
+        return em.find(DailyMenu.class, LocalDate.now());
     }
 
     /**
      * Get daily menu for a specific date
      */
     public DailyMenu getDailyMenuForDate(LocalDate date) {
-        return null;
+        List<DailyMenu> result = em.createQuery(
+                "SELECT d FROM DailyMenu d WHERE d.Date = :date", DailyMenu.class)
+                .setParameter("date", date)
+                .getResultList();
+        return result.isEmpty() ? null : result.get(0);
     }
 
     /**
      * Add a menu item to a daily menu
      */
-    public void addItemToDailyMenu(Long weeklyMenuId, Long menuItemId) {
+    public void addItemToDailyMenu(Long dailyMenuId, Long menuItemId) {
+        DailyMenu dailyMenu = em.find(DailyMenu.class, dailyMenuId);
+        MenuItem menuItem = em.find(MenuItem.class, menuItemId);
 
+        if(dailyMenu != null && menuItem != null) {
+            dailyMenu.getMenuItems().add(menuItem);
+            em.merge(dailyMenu);
+        }
     }
 
     /**
      * Remove a menu item from a daily menu
      */
-    public void removeItemFromDailyMenu(Long weeklyMenuId, Long menuItemId) {
+    public void removeItemFromDailyMenu(Long dailyMenuId, Long menuItemId) {
+        DailyMenu dailyMenu = em.find(DailyMenu.class, dailyMenuId);
+        MenuItem menuItem = em.find(MenuItem.class, menuItemId);
 
+        if(dailyMenu != null && menuItem != null) {
+            dailyMenu.getMenuItems().remove(menuItem);
+            em.merge(dailyMenu);
+        }
     }
 }

@@ -3,7 +3,15 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_2.xsd"
              version="3.2">
-    <persistence-unit name="default">
 
+    <persistence-unit name="default" transaction-type="JTA">
+        <jta-data-source>jdbc/menuDS</jta-data-source>
+        <class>com.miun.martinclass.demo.menu.entity.MenuItem</class>
+        <class>com.miun.martinclass.demo.menu.entity.DailyMenu</class>
+
+        <properties>
+            <property name="jakarta.persistence.schema-generation.database.action" value="create"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+        </properties>
     </persistence-unit>
 </persistence>
