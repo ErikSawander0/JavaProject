@@ -2,40 +2,219 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets">
+      xmlns:ui="jakarta.faces.facelets"
+      lang="sv">
 <h:head>
-    <title>Restaurant Menu</title>
+    <meta charset="UTF-8"/>
+    <title>Antons Skafferi – Meny</title>
+
+    <style>
+        body {
+            font-family: "Georgia", serif;
+            background: #faf8f5;
+            color: #4b453e;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 50px;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            margin-top: 120px;
+            color: #000000;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #8f8379;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            width: 100%;
+            padding: 15px 0;
+            background: white;
+            border-top: 1px solid #ddd6cf;
+            border-bottom: 1px solid #ddd6cf;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-links {
+            display: inline-flex;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #6a6057;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 5px 10px;
+        }
+
+        .nav-links a:hover {
+            color: #b1966a;
+        }
+
+        /* MENU SECTIONS */
+        .menu-section {
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #dcc9b2;
+            padding-bottom: 8px;
+            color: #715d4c;
+        }
+
+        .menu-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e5ded7;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #3a332e;
+        }
+
+        .price {
+            float: right;
+            font-weight: bold;
+            color: #b08a53;
+        }
+
+        .description {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #7d736a;
+        }
+
+        .tags {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #8a7d71;
+        }
+    </style>
 </h:head>
+
 <h:body>
-    <h1>Our Menu</h1>
 
-    <ui:repeat value="#{menuBean.menuItems}" var="item">
-        <div>
-            <strong>#{item.name}</strong> - $#{item.price}
-            <br/>
-            #{item.description}
-            <br/>
-            ID: #{item.id}
-            <br/>
-            <ui:fragment rendered="#{item.isVegan}">
-                ✓ Vegan
-                <br/>
-            </ui:fragment>
-            <ui:fragment rendered="#{item.isGlutenFree}">
-                ✓ Gluten-Free
-                <br/>
-            </ui:fragment>
-            <ui:fragment rendered="#{not empty item.allergens}">
-                Allergens: #{item.allergens}
-                <br/>
-            </ui:fragment>
+    <!-- HEADER -->
+    <h1>ANTONS SKAFFERI</h1>
+    <div class="subtitle">Resturang bla bla bla...</div>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="#">Hem</a>
+            <a href="#lunch">Dagens Lunch</a>
+            <a href="#forratter">Förrätter</a>
+            <a href="#huvudratter">Huvudrätter</a>
+            <a href="#efterratter">Efterrätter</a>
         </div>
-        <hr/>
-    </ui:repeat>
+    </div>
 
-    <!-- If no items -->
-    <h:outputText value="No menu items available."
-                  rendered="#{empty menuBean.menuItems}"/>
+    <!-- DAGENS LUNCH -->
+    <div class="menu-section" id="lunch">
+        <div class="section-title">Dagens Lunch</div>
+
+        <div class="menu-item">
+            <span class="menu-title">Dagens Rätt</span>
+            <span class="price">119 kr</span>
+            <div class="description">Grillad kycklingfilé med rostad potatis och timjanssås.</div>
+        </div>
+
+        <div class="menu-item">
+            <span class="menu-title">Dagens Soppa</span>
+            <span class="price">99 kr</span>
+            <div class="description">Krämig tomatsoppa med basilika och nybakat bröd.</div>
+        </div>
+
+        <div class="menu-item">
+            <span class="menu-title">Dagens Vegetariska</span>
+            <span class="price">109 kr</span>
+            <div class="description">Rostad blomkålsbowl med bulgur, örter och hummus.</div>
+            <div class="tags">&#8226; Vegetarisk &#8226; Glutenfri</div>
+        </div>
+    </div>
+
+    <!-- FÖRRÄTTER (exempel) -->
+    <div class="menu-section" id="forratter">
+        <div class="section-title">Förrätter</div>
+
+        <div class="menu-item">
+            <span class="menu-title">Carpaccio på Oxfilé</span>
+            <span class="price">145 kr</span>
+            <div class="description">
+                Tunt skivad oxfilé med parmesan, citronolja och kapris.
+            </div>
+        </div>
+    </div>
+
+    <!-- HUVUDRÄTTER (exempel) -->
+    <div class="menu-section" id="huvudratter">
+        <div class="section-title">Huvudrätter</div>
+
+        <div class="menu-item">
+            <span class="menu-title">Helstekt Ryggbiff</span>
+            <span class="price">295 kr</span>
+            <div class="description">
+                Med rödvinssås, rostad potatis och smörslungade haricots verts.
+            </div>
+        </div>
+    </div>
+
+    <!-- EFTERRÄTTER (exempel) -->
+    <div class="menu-section" id="efterratter">
+        <div class="section-title">Efterrätter</div>
+
+        <div class="menu-item">
+            <span class="menu-title">Crème Brûlée</span>
+            <span class="price">105 kr</span>
+            <div class="description">
+                Klassisk fransk dessert med krispigt karamelltäcke och vanilj.
+            </div>
+        </div>
+    </div>
+
+    <!-- DATABAS (menuBean) -->
+    <div class="menu-section">
+        <div class="section-title">Här kommer de riktiga rätterna vara från databas</div>
+
+        <ui:repeat value="#{menuBean.menuItems}" var="item">
+            <div class="menu-item">
+                <span class="menu-title">#{item.name}</span>
+                <span class="price">#{item.price} kr</span>
+
+                <div class="description">#{item.description}</div>
+
+                <div class="tags">
+                    <ui:fragment rendered="#{item.vegan}">
+                        &#8226; Vegan
+                    </ui:fragment>
+                    <ui:fragment rendered="#{item.glutenFree}">
+                        &#8226; Glutenfri
+                    </ui:fragment>
+                    <ui:fragment rendered="#{not empty item.allergens}">
+                        &#8226; Allergener: #{item.allergens}
+                    </ui:fragment>
+                </div>
+            </div>
+        </ui:repeat>
+
+        <h:outputText value="Inga rätter i databasen."
+                      rendered="#{empty menuBean.menuItems}"/>
+    </div>
 
 </h:body>
 </html>
