@@ -199,10 +199,10 @@
                 <div class="description">#{item.description}</div>
 
                 <div class="tags">
-                    <ui:fragment rendered="#{item.vegan}">
+                    <ui:fragment rendered="#{item.isVegan}">
                         &#8226; Vegan
                     </ui:fragment>
-                    <ui:fragment rendered="#{item.glutenFree}">
+                    <ui:fragment rendered="#{item.isGlutenFree}">
                         &#8226; Glutenfri
                     </ui:fragment>
                     <ui:fragment rendered="#{not empty item.allergens}">

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "weekly_menus")
+@Table(name = "daily_menus")
 public class DailyMenu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class DailyMenu {
 
     @ManyToMany
     @JoinTable(
-            name = "weekly_menu_items",
+            name = "daily_menu_items",
             joinColumns = @JoinColumn(name = "menu_id"),
             inverseJoinColumns = @JoinColumn(name = "item_id")
     )

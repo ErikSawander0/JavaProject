@@ -1,5 +1,6 @@
 package com.miun.martinclass.demo.menu.web;
 
+import com.miun.martinclass.demo.menu.entity.DailyMenu;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
 import com.miun.martinclass.demo.menu.service.MenuService;
 import jakarta.annotation.PostConstruct;
@@ -7,6 +8,7 @@ import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Named("menuBean")
@@ -18,12 +20,17 @@ public class MenuBean {
 
     @PostConstruct
     public void init() {
-        menuItems = menuService.getTodaysMenu().getMenuItems();
+        DailyMenu todaysMenu = menuService.getTodaysMenu();
+        System.out.println(todaysMenu);
+        if(todaysMenu != null) {
+            menuItems = todaysMenu.getMenuItems();
+        } else {
+            menuItems = new ArrayList<>();
+        }
     }
 
     public List<MenuItem> getMenuItems() {
         return menuItems;
     }
-
 
 }

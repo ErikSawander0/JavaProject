@@ -114,60 +114,14 @@ public class MenuService {
      * Get the current active daily menu (most important!)
      */
     public DailyMenu getTodaysMenu() {
-        /*
-        // Create a dummy DailyMenu for testing
-        DailyMenu menu = new DailyMenu();
-        menu.setId(1L);
-        menu.setDate(LocalDate.now());
+        List<DailyMenu> results = em.createQuery("SELECT d FROM DailyMenu d WHERE d.Date = :date", DailyMenu.class)
+                .setParameter("date", LocalDate.now())
+                .getResultList();
 
-        // Create some dummy MenuItems
-        List<MenuItem> items = new ArrayList<>();
-
-        MenuItem item1 = new MenuItem();
-        item1.setId(1L);
-        item1.setName("Pasta Alfredo");
-        item1.setDescription("Creamy pasta with parmesan cheese and garlic");
-        item1.setPrice(new BigDecimal("12.99"));
-        item1.setIsVegan(false);
-        item1.setIsGlutenFree(false);
-        item1.setAllergens("dairy, gluten");
-        items.add(item1);
-
-        MenuItem item2 = new MenuItem();
-        item2.setId(2L);
-        item2.setName("Veggie Burger");
-        item2.setDescription("Plant-based burger with lettuce, tomato, and fries");
-        item2.setPrice(new BigDecimal("9.50"));
-        item2.setIsVegan(true);
-        item2.setIsGlutenFree(false);
-        item2.setAllergens("gluten");
-        items.add(item2);
-
-        MenuItem item3 = new MenuItem();
-        item3.setId(3L);
-        item3.setName("Grilled Salmon");
-        item3.setDescription("Fresh Atlantic salmon with roasted vegetables");
-        item3.setPrice(new BigDecimal("18.99"));
-        item3.setIsVegan(false);
-        item3.setIsGlutenFree(true);
-        item3.setAllergens("fish");
-        items.add(item3);
-
-        MenuItem item4 = new MenuItem();
-        item4.setId(4L);
-        item4.setName("Caesar Salad");
-        item4.setDescription("Romaine lettuce with Caesar dressing and croutons");
-        item4.setPrice(new BigDecimal("8.50"));
-        item4.setIsVegan(false);
-        item4.setIsGlutenFree(false);
-        item4.setAllergens("dairy, gluten, eggs");
-        items.add(item4);
-
-        // Set the items in the menu
-        menu.setMenuItems(items);
-
-        return menu;*/
-        return em.find(DailyMenu.class, LocalDate.now());
+        if (results.isEmpty()) {
+            return null;
+        }
+        return results.get(0);
     }
 
     /**
