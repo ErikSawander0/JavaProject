@@ -13,7 +13,7 @@ import java.util.List;
 @Stateless
 public class MenuService {
 
-    //@PersistenceContext(unitName = "menuPU")
+    @PersistenceContext(unitName = "default")
     private EntityManager em;
 
     // ========== MenuItem CRUD ==========
