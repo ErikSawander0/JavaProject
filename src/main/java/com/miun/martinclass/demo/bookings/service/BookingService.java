@@ -1,19 +1,20 @@
 package com.miun.martinclass.demo.bookings.service;
 
 import com.miun.martinclass.demo.bookings.entity.Booking;
-import com.miun.martinclass.demo.menu.entity.DailyMenu;
-import com.miun.martinclass.demo.menu.entity.MenuItem;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Stateless
 public class BookingService {
     @PersistenceContext(unitName = "default")
     private EntityManager em;
+
     // ========== Booking CRUD ==========
 
     /**
@@ -49,62 +50,93 @@ public class BookingService {
      */
     public void deleteBooking(Long id) {
         Booking item = em.find(Booking.class, id);
-        if(item != null) {
+        if (item != null) {
             em.remove(item);
         }
     }
 
-
     // ========== Key Query Methods ==========
 
     /**
-     * Get the days bookings. TODO: replace this with the actual db interaction.
+     * Get today's bookings from the database.
      */
     public List<Booking> getTodaysBookings() {
         LocalDate today = LocalDate.now();
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
 
-        Booking booking1 = new Booking();
-        booking1.dateTime = today.atTime(12, 30);
-        booking1.numberOfPeople = 4;
-        booking1.tableNum = 5;
-        booking1.phoneNumber = "+46701234567";
-        booking1.name = "Erik Andersson";
-
-        Booking booking2 = new Booking();
-        booking2.dateTime = today.atTime(18, 0);
-        booking2.numberOfPeople = 2;
-        booking2.tableNum = 3;
-        booking2.phoneNumber = "+46709876543";
-        booking2.name = "Maria Svensson";
-
-        Booking booking3 = new Booking();
-        booking3.dateTime = today.atTime(19, 30);
-        booking3.numberOfPeople = 6;
-        booking3.tableNum = 8;
-        booking3.phoneNumber = "+46702345678";
-        booking3.name = "Johan Karlsson";
-
-        return List.of(booking1, booking2, booking3);
+        return em.createQuery(
+                        "SELECT b FROM Booking b WHERE b.dateTime BETWEEN :start AND :end",
+                        Booking.class)
+                .setParameter("start", startOfDay)
+                .setParameter("end", endOfDay)
+                .getResultList();
     }
 
     /**
-     * Get the days bookings for a specific date TODO: replace this with the actual db interaction.
+     * Get bookings for a specific date from the database.
      */
     public List<Booking> getBookingsForDate(LocalDate date) {
-        Booking booking1 = new Booking();
-        booking1.dateTime = date.atTime(13, 0);
-        booking1.numberOfPeople = 3;
-        booking1.tableNum = 2;
-        booking1.phoneNumber = "+46705551234";
-        booking1.name = "Anna Lindström";
+        LocalDateTime startOfDay = date.atStartOfDay();
+        LocalDateTime endOfDay = date.atTime(LocalTime.MAX);
 
-        Booking booking2 = new Booking();
-        booking2.dateTime = date.atTime(17, 30);
-        booking2.numberOfPeople = 5;
-        booking2.tableNum = 7;
-        booking2.phoneNumber = "+46708889999";
-        booking2.name = "Peter Bergman";
-
-        return List.of(booking1, booking2);
+        return em.createQuery(
+                        "SELECT b FROM Booking b WHERE b.dateTime BETWEEN :start AND :end",
+                        Booking.class)
+                .setParameter("start", startOfDay)
+                .setParameter("end", endOfDay)
+                .getResultList();
     }
+
+    /*
+     * ===========================
+     * Dummy example data (for testing only)
+     * ===========================
+     *
+     * Example for getTodaysBookings():
+     *
+     * LocalDate today = LocalDate.now();
+     *
+     * Booking booking1 = new Booking();
+     * booking1.dateTime = today.atTime(12, 30);
+     * booking1.numberOfPeople = 4;
+     * booking1.tableNum = 5;
+     * booking1.phoneNumber = "+46701234567";
+     * booking1.name = "Erik Andersson";
+     *
+     * Booking booking2 = new Booking();
+     * booking2.dateTime = today.atTime(18, 0);
+     * booking2.numberOfPeople = 2;
+     * booking2.tableNum = 3;
+     * booking2.phoneNumber = "+46709876543";
+     * booking2.name = "Maria Svensson";
+     *
+     * Booking booking3 = new Booking();
+     * booking3.dateTime = today.atTime(19, 30);
+     * booking3.numberOfPeople = 6;
+     * booking3.tableNum = 8;
+     * booking3.phoneNumber = "+46702345678";
+     * booking3.name = "Johan Karlsson";
+     *
+     * return List.of(booking1, booking2, booking3);
+     *
+     *
+     * Example for getBookingsForDate(LocalDate date):
+     *
+     * Booking booking1 = new Booking();
+     * booking1.dateTime = date.atTime(13, 0);
+     * booking1.numberOfPeople = 3;
+     * booking1.tableNum = 2;
+     * booking1.phoneNumber = "+46705551234";
+     * booking1.name = "Anna Lindström";
+     *
+     * Booking booking2 = new Booking();
+     * booking2.dateTime = date.atTime(17, 30);
+     * booking2.numberOfPeople = 5;
+     * booking2.tableNum = 7;
+     * booking2.phoneNumber = "+46708889999";
+     * booking2.name = "Peter Bergman";
+     *
+     * return List.of(booking1, booking2);
+     */
 }
