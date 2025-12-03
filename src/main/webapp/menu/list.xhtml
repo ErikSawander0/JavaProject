@@ -104,6 +104,45 @@
             font-size: 14px;
             color: #8a7d71;
         }
+
+        /* DAY TABS */
+        .day-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #dcc9b2;
+        }
+
+        .day-tab {
+            padding: 12px 25px;
+            background: transparent;
+            border: none;
+            color: #8f8379;
+            font-size: 16px;
+            font-family: "Georgia", serif;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .day-tab:hover {
+            color: #715d4c;
+        }
+
+        .day-tab.active {
+            color: #715d4c;
+            border-bottom-color: #b08a53;
+            font-weight: bold;
+        }
+
+        .no-menu {
+            text-align: center;
+            color: #8f8379;
+            padding: 40px 20px;
+            font-style: italic;
+        }
     </style>
 </h:head>
 
@@ -111,109 +150,160 @@
 
     <!-- HEADER -->
     <h1>ANTONS SKAFFERI</h1>
-    <div class="subtitle">Resturang bla bla bla...</div>
+    <div class="subtitle">Traditionell svensk matkultur med moderna influenser</div>
 
     <!-- NAVBAR -->
     <div class="navbar">
         <div class="nav-links">
             <a href="#">Hem</a>
             <a href="#lunch">Dagens Lunch</a>
-            <a href="#forratter">Förrätter</a>
-            <a href="#huvudratter">Huvudrätter</a>
-            <a href="#efterratter">Efterrätter</a>
+            <a href="#alacarte">À la Carte</a>
         </div>
     </div>
 
-    <!-- DAGENS LUNCH -->
+    <!-- DAGENS LUNCH SECTION -->
     <div class="menu-section" id="lunch">
         <div class="section-title">Dagens Lunch</div>
+        <p style="text-align: center; color: #8f8379; margin-bottom: 25px;">
+            Serveras vardagar 11:00 - 14:00
+        </p>
 
-        <div class="menu-item">
-            <span class="menu-title">Dagens Rätt</span>
-            <span class="price">119 kr</span>
-            <div class="description">Grillad kycklingfilé med rostad potatis och timjanssås.</div>
-        </div>
-
-        <div class="menu-item">
-            <span class="menu-title">Dagens Soppa</span>
-            <span class="price">99 kr</span>
-            <div class="description">Krämig tomatsoppa med basilika och nybakat bröd.</div>
-        </div>
-
-        <div class="menu-item">
-            <span class="menu-title">Dagens Vegetariska</span>
-            <span class="price">109 kr</span>
-            <div class="description">Rostad blomkålsbowl med bulgur, örter och hummus.</div>
-            <div class="tags">&#8226; Vegetarisk &#8226; Glutenfri</div>
-        </div>
-    </div>
-
-    <!-- FÖRRÄTTER (exempel) -->
-    <div class="menu-section" id="forratter">
-        <div class="section-title">Förrätter</div>
-
-        <div class="menu-item">
-            <span class="menu-title">Carpaccio på Oxfilé</span>
-            <span class="price">145 kr</span>
-            <div class="description">
-                Tunt skivad oxfilé med parmesan, citronolja och kapris.
+        <h:form id="lunchForm">
+            <!-- Day Tabs -->
+            <div class="day-tabs">
+                <h:commandButton value="Måndag"
+                                 actionListener="#{menuBean.selectDay('MONDAY')}"
+                                 styleClass="day-tab #{menuBean.selectedDay == 'MONDAY' ? 'active' : ''}">
+                    <f:ajax render="menuContent" execute="@this"/>
+                </h:commandButton>
+                <h:commandButton value="Tisdag"
+                                 actionListener="#{menuBean.selectDay('TUESDAY')}"
+                                 styleClass="day-tab #{menuBean.selectedDay == 'TUESDAY' ? 'active' : ''}">
+                    <f:ajax render="menuContent" execute="@this"/>
+                </h:commandButton>
+                <h:commandButton value="Onsdag"
+                                 actionListener="#{menuBean.selectDay('WEDNESDAY')}"
+                                 styleClass="day-tab #{menuBean.selectedDay == 'WEDNESDAY' ? 'active' : ''}">
+                    <f:ajax render="menuContent" execute="@this"/>
+                </h:commandButton>
+                <h:commandButton value="Torsdag"
+                                 actionListener="#{menuBean.selectDay('THURSDAY')}"
+                                 styleClass="day-tab #{menuBean.selectedDay == 'THURSDAY' ? 'active' : ''}">
+                    <f:ajax render="menuContent" execute="@this"/>
+                </h:commandButton>
+                <h:commandButton value="Fredag"
+                                 actionListener="#{menuBean.selectDay('FRIDAY')}"
+                                 styleClass="day-tab #{menuBean.selectedDay == 'FRIDAY' ? 'active' : ''}">
+                    <f:ajax render="menuContent" execute="@this"/>
+                </h:commandButton>
             </div>
-        </div>
+
+            <!-- Daily Menu Items -->
+            <h:panelGroup id="menuContent">
+                <h:panelGroup rendered="#{not empty menuBean.currentDailyMenu}">
+                    <ui:repeat value="#{menuBean.currentDailyMenu.menuItems}" var="item">
+                        <div class="menu-item">
+                            <span class="menu-title">#{item.name}</span>
+                            <span class="price">#{item.price} kr</span>
+                            <div class="description">#{item.description}</div>
+                            <div class="tags">
+                                <ui:fragment rendered="#{item.isVegan}">
+                                    &#8226; Vegansk
+                                </ui:fragment>
+                                <ui:fragment rendered="#{item.isGlutenFree}">
+                                    &#8226; Glutenfri
+                                </ui:fragment>
+                                <ui:fragment rendered="#{not empty item.allergens}">
+                                    &#8226; Allergener: #{item.allergens}
+                                </ui:fragment>
+                            </div>
+                        </div>
+                    </ui:repeat>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{empty menuBean.currentDailyMenu}">
+                    <div class="no-menu">Ingen meny planerad för denna dag.</div>
+                </h:panelGroup>
+            </h:panelGroup>
+        </h:form>
     </div>
 
-    <!-- HUVUDRÄTTER (exempel) -->
-    <div class="menu-section" id="huvudratter">
-        <div class="section-title">Huvudrätter</div>
+    <!-- À LA CARTE SECTION -->
+    <div class="menu-section" id="alacarte">
+        <div class="section-title">À la Carte</div>
 
-        <div class="menu-item">
-            <span class="menu-title">Helstekt Ryggbiff</span>
-            <span class="price">295 kr</span>
-            <div class="description">
-                Med rödvinssås, rostad potatis och smörslungade haricots verts.
-            </div>
-        </div>
-    </div>
-
-    <!-- EFTERRÄTTER (exempel) -->
-    <div class="menu-section" id="efterratter">
-        <div class="section-title">Efterrätter</div>
-
-        <div class="menu-item">
-            <span class="menu-title">Crème Brûlée</span>
-            <span class="price">105 kr</span>
-            <div class="description">
-                Klassisk fransk dessert med krispigt karamelltäcke och vanilj.
-            </div>
-        </div>
-    </div>
-
-    <!-- DATABAS (menuBean) -->
-    <div class="menu-section">
-        <div class="section-title">Här kommer de riktiga rätterna vara från databas</div>
-
-        <ui:repeat value="#{menuBean.menuItems}" var="item">
-            <div class="menu-item">
-                <span class="menu-title">#{item.name}</span>
-                <span class="price">#{item.price} kr</span>
-
-                <div class="description">#{item.description}</div>
-
-                <div class="tags">
-                    <ui:fragment rendered="#{item.isVegan}">
-                        &#8226; Vegan
-                    </ui:fragment>
-                    <ui:fragment rendered="#{item.isGlutenFree}">
-                        &#8226; Glutenfri
-                    </ui:fragment>
-                    <ui:fragment rendered="#{not empty item.allergens}">
-                        &#8226; Allergener: #{item.allergens}
-                    </ui:fragment>
+        <!-- Förrätter -->
+        <h:panelGroup rendered="#{not empty menuBean.appetizers}">
+            <h3 style="color: #6a6057; font-size: 20px; margin: 25px 0 15px;">Förrätter</h3>
+            <ui:repeat value="#{menuBean.appetizers}" var="item">
+                <div class="menu-item">
+                    <span class="menu-title">#{item.name}</span>
+                    <span class="price">#{item.price} kr</span>
+                    <div class="description">#{item.description}</div>
+                    <div class="tags">
+                        <ui:fragment rendered="#{item.isVegan}">
+                            &#8226; Vegansk
+                        </ui:fragment>
+                        <ui:fragment rendered="#{item.isGlutenFree}">
+                            &#8226; Glutenfri
+                        </ui:fragment>
+                        <ui:fragment rendered="#{not empty item.allergens}">
+                            &#8226; Allergener: #{item.allergens}
+                        </ui:fragment>
+                    </div>
                 </div>
-            </div>
-        </ui:repeat>
+            </ui:repeat>
+        </h:panelGroup>
 
-        <h:outputText value="Inga rätter i databasen."
-                      rendered="#{empty menuBean.menuItems}"/>
+        <!-- Huvudrätter -->
+        <h:panelGroup rendered="#{not empty menuBean.mainCourses}">
+            <h3 style="color: #6a6057; font-size: 20px; margin: 25px 0 15px;">Huvudrätter</h3>
+            <ui:repeat value="#{menuBean.mainCourses}" var="item">
+                <div class="menu-item">
+                    <span class="menu-title">#{item.name}</span>
+                    <span class="price">#{item.price} kr</span>
+                    <div class="description">#{item.description}</div>
+                    <div class="tags">
+                        <ui:fragment rendered="#{item.isVegan}">
+                            &#8226; Vegansk
+                        </ui:fragment>
+                        <ui:fragment rendered="#{item.isGlutenFree}">
+                            &#8226; Glutenfri
+                        </ui:fragment>
+                        <ui:fragment rendered="#{not empty item.allergens}">
+                            &#8226; Allergener: #{item.allergens}
+                        </ui:fragment>
+                    </div>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <!-- Efterrätter -->
+        <h:panelGroup rendered="#{not empty menuBean.desserts}">
+            <h3 style="color: #6a6057; font-size: 20px; margin: 25px 0 15px;">Efterrätter</h3>
+            <ui:repeat value="#{menuBean.desserts}" var="item">
+                <div class="menu-item">
+                    <span class="menu-title">#{item.name}</span>
+                    <span class="price">#{item.price} kr</span>
+                    <div class="description">#{item.description}</div>
+                    <div class="tags">
+                        <ui:fragment rendered="#{item.isVegan}">
+                            &#8226; Vegansk
+                        </ui:fragment>
+                        <ui:fragment rendered="#{item.isGlutenFree}">
+                            &#8226; Glutenfri
+                        </ui:fragment>
+                        <ui:fragment rendered="#{not empty item.allergens}">
+                            &#8226; Allergener: #{item.allergens}
+                        </ui:fragment>
+                    </div>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{empty menuBean.appetizers and empty menuBean.mainCourses and empty menuBean.desserts}">
+            <div class="no-menu">À la carte-menyn uppdateras snart.</div>
+        </h:panelGroup>
     </div>
 
 </h:body>

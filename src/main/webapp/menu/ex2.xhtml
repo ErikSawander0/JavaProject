@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      lang="sv">
+<h:head>
+    <meta charset="UTF-8"/>
+    <title>Antons Skafferi – Meny</title>
+
+    <style>
+        body {
+            font-family: "Georgia", serif;
+            background: #faf8f5;
+            color: #4b453e;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 50px;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            margin-top: 120px;
+            color: #000000;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #8f8379;
+        }
+
+        .navbar {
+            width: 100%;
+            padding: 15px 0;
+            background: white;
+            border-top: 1px solid #ddd6cf;
+            border-bottom: 1px solid #ddd6cf;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .nav-links {
+            display: inline-flex;
+            gap: 35px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #6a6057;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 5px 10px;
+        }
+
+        .nav-links a:hover {
+            color: #b1966a;
+        }
+
+        .menu-section {
+            max-width: 700px;
+            margin: 0 auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #dcc9b2;
+            padding-bottom: 8px;
+            color: #715d4c;
+        }
+
+        .menu-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #e5ded7;
+        }
+
+        .menu-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #3a332e;
+        }
+
+        .price {
+            float: right;
+            font-weight: bold;
+            color: #b08a53;
+        }
+
+        .description {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #7d736a;
+        }
+
+        .tags {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #8a7d71;
+        }
+
+        /* DAY SELECTOR */
+        .day-selector {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .day-selector label {
+            font-size: 16px;
+            color: #715d4c;
+            margin-right: 15px;
+            font-weight: bold;
+        }
+
+        .day-dropdown {
+            padding: 10px 20px;
+            font-family: "Georgia", serif;
+            font-size: 16px;
+            border: 1px solid #ddd6cf;
+            background: white;
+            color: #4b453e;
+            cursor: pointer;
+            min-width: 200px;
+        }
+
+        .day-dropdown:focus {
+            outline: none;
+            border-color: #b08a53;
+        }
+
+        .no-menu {
+            text-align: center;
+            color: #8f8379;
+            padding: 40px 20px;
+            font-style: italic;
+        }
+
+        .info-text {
+            text-align: center;
+            color: #8f8379;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <h1>ANTONS SKAFFERI</h1>
+    <div class="subtitle">Traditionell svensk matkultur med moderna influenser</div>
+
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="#">Hem</a>
+            <a href="#lunch">Dagens Lunch</a>
+            <a href="#alacarte">À la Carte</a>
+        </div>
+    </div>
+
+    <!-- DAGENS LUNCH -->
+    <div class="menu-section" id="lunch">
+        <div class="section-title">Dagens Lunch</div>
+        <div class="info-text">Serveras vardagar 11:00 - 14:00</div>
+
+        <h:form>
+            <div class="day-selector">
+                <label for="daySelect">Välj dag:</label>
+                <h:selectOneMenu id="daySelect"
+                                 value="#{menuBean.selectedDay}"
+                                 styleClass="day-dropdown"
+                                 onchange="submit()">
+                    <f:selectItem itemValue="MONDAY" itemLabel="Måndag"/>
+                    <f:selectItem itemValue="TUESDAY" itemLabel="Tisdag"/>
+                    <f:selectItem itemValue="WEDNESDAY" itemLabel="Onsdag"/>
+                    <f:selectItem itemValue="THURSDAY" itemLabel="Torsdag"/>
+                    <f:selectItem itemValue="FRIDAY" itemLabel="Fredag"/>
+                </h:selectOneMenu>
+            </div>
+        </h:form>
+
+        <h:panelGroup rendered="#{not empty menuBean.currentDailyMenu}">
+            <ui:repeat value="#{menuBean.currentDailyMenu.menuItems}" var="item">
+                <div class="menu-item">
+                    <span class="menu-title">#{item.name}</span>
+                    <span class="price">#{item.price} kr</span>
+                    <div class="description">#{item.description}</div>
+                    <div class="tags">
+                        <ui:fragment rendered="#{item.isVegan}">
+                            &#8226; Vegansk
+                        </ui:fragment>
+                        <ui:fragment rendered="#{item.isGlutenFree}">
+                            &#8226; Glutenfri
+                        </ui:fragment>
+                        <ui:fragment rendered="#{not empty item.allergens}">
+                            &#8226; Allergener: #{item.allergens}
+                        </ui:fragment>
+                    </div>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{empty menuBean.currentDailyMenu}">
+            <div class="no-menu">Ingen meny planerad för denna dag.</div>
+        </h:panelGroup>
+    </div>
+
+    <!-- À LA CARTE -->
+    <div class="menu-section" id="alacarte">
+        <div class="section-title">À la Carte</div>
+
+        <h:panelGroup rendered="#{not empty menuBean.appetizers}">
+            <h3 style="color: #6a6057; font-size: 20px; margin: 25px 0 15px;">Förrätter</h3>
+            <ui:repeat value="#{menuBean.appetizers}" var="item">
+                <div class="menu-item">
+                    <span class="menu-title">#{item.name}</span>
+                    <span class="price">#{item.price} kr</span>
+                    <div class="description">#{item.description}</div>
+                    <div class="tags">
+                        <ui:fragment rendered="#{item.isVegan}">&#8226; Vegansk</ui:fragment>
+                        <ui:fragment rendered="#{item.isGlutenFree}">&#8226; Glutenfri</ui:fragment>
+                        <ui:fragment rendered="#{not empty item.allergens}">&#8226; Allergener: #{item.allergens}</ui:fragment>
+                    </div>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty menuBean.mainCourses}">
+            <h3 style="color: #6a6057; font-size: 20px; margin: 25px 0 15px;">Huvudrätter</h3>
+            <ui:repeat value="#{menuBean.mainCourses}" var="item">
+                <div class="menu-item">
+                    <span class="menu-title">#{item.name}</span>
+                    <span class="price">#{item.price} kr</span>
+                    <div class="description">#{item.description}</div>
+                    <div class="tags">
+                        <ui:fragment rendered="#{item.isVegan}">&#8226; Vegansk</ui:fragment>
+                        <ui:fragment rendered="#{item.isGlutenFree}">&#8226; Glutenfri</ui:fragment>
+                        <ui:fragment rendered="#{not empty item.allergens}">&#8226; Allergener: #{item.allergens}</ui:fragment>
+                    </div>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{not empty menuBean.desserts}">
+            <h3 style="color: #6a6057; font-size: 20px; margin: 25px 0 15px;">Efterrätter</h3>
+            <ui:repeat value="#{menuBean.desserts}" var="item">
+                <div class="menu-item">
+                    <span class="menu-title">#{item.name}</span>
+                    <span class="price">#{item.price} kr</span>
+                    <div class="description">#{item.description}</div>
+                    <div class="tags">
+                        <ui:fragment rendered="#{item.isVegan}">&#8226; Vegansk</ui:fragment>
+                        <ui:fragment rendered="#{item.isGlutenFree}">&#8226; Glutenfri</ui:fragment>
+                        <ui:fragment rendered="#{not empty item.allergens}">&#8226; Allergener: #{item.allergens}</ui:fragment>
+                    </div>
+                </div>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{empty menuBean.appetizers and empty menuBean.mainCourses and empty menuBean.desserts}">
+            <div class="no-menu">À la carte-menyn uppdateras snart.</div>
+        </h:panelGroup>
+    </div>
+
+</h:body>
+</html>
