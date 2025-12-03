@@ -12,7 +12,7 @@ import java.util.List;
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
 
     public LocalDateTime dateTime;
     public int numberOfPeople;

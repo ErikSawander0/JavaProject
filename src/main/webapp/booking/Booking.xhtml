@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <title>Boka bord</title>
+</h:head>
+
+<h:body style="font-family: Arial; margin: 40px;">
+
+    <h1>Boka bord</h1>
+
+    <h:form>
+
+        <!-- Antal personer -->
+        <h:outputLabel for="group" value="Antal personer:" />
+        <h:inputText id="group"
+                     value="#{bookingBean.groupSize}"
+                     required="true" />
+        <br/><br/>
+
+        <!-- Datum -->
+        <h:outputLabel for="date" value="Välj datum:" />
+        <h:inputText id="date" value="#{bookingBean.selectedDate}">
+            <f:convertDateTime pattern="yyyy-MM-dd" />
+        </h:inputText>
+        <br/><br/>
+
+        <!-- Knapp -->
+        <h:commandButton value="Visa tillgängliga tider"
+                         action="#{bookingBean.loadAvailableTimes}" />
+        <br/><br/>
+
+        <!-- Lista över tider -->
+        <h:panelGroup rendered="#{not empty bookingBean.availableTimes}">
+            <h3>Tillgängliga tider:</h3>
+            <ul>
+                <ui:repeat value="#{bookingBean.availableTimes}" var="t">
+                    <li><h:outputText value="#{t}" /></li>
+                </ui:repeat>
+            </ul>
+        </h:panelGroup>
+
+    </h:form>
+
+</h:body>
+</html>
