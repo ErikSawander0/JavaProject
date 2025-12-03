@@ -69,6 +69,7 @@ public class BookingService {
         booking1.tableNum = 5;
         booking1.phoneNumber = "+46701234567";
         booking1.name = "Erik Andersson";
+        booking1.id = 1L;
 
         Booking booking2 = new Booking();
         booking2.dateTime = today.atTime(18, 0);
@@ -76,6 +77,7 @@ public class BookingService {
         booking2.tableNum = 3;
         booking2.phoneNumber = "+46709876543";
         booking2.name = "Maria Svensson";
+        booking2.id = 2L;
 
         Booking booking3 = new Booking();
         booking3.dateTime = today.atTime(19, 30);
@@ -83,6 +85,7 @@ public class BookingService {
         booking3.tableNum = 8;
         booking3.phoneNumber = "+46702345678";
         booking3.name = "Johan Karlsson";
+        booking2.id = 3L;
 
         return List.of(booking1, booking2, booking3);
     }
