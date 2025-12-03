@@ -1,0 +1,109 @@
+body {
+    background: #0c1222;
+    color: white;
+    font-family: Georgia, serif;
+    margin: 0;
+}
+
+.title {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 40px;
+}
+
+.subtitle {
+    text-align: center;
+    opacity: .8;
+    margin-bottom: 40px;
+}
+
+.wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+}
+
+.calendar-box, .form-box {
+    background: #111a30;
+    padding: 30px;
+    border-radius: 20px;
+    width: 420px;
+}
+
+/* Kalender */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cal-btn {
+    background: #0d1222;
+    border: 1px solid #23345b;
+    color: white;
+    padding: 6px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.day-names {
+    display: grid;
+    grid-template-columns: repeat(7,1fr);
+    margin-top: 20px;
+    opacity: .7;
+    text-align: center;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.day-btn {
+    background: #1d2c4b;
+    color: white;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.day-btn:hover {
+    background: #274074;
+}
+
+.day-btn.active {
+    background: #3a79ff;
+    border: 1px solid #6ca1ff;
+}
+
+/* Form */
+.form-row {
+    margin-bottom: 20px;
+}
+
+.input {
+    background: #0e1627;
+    border: 1px solid #1b2b4a;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    color: white;
+}
+
+.btn {
+    background: #3a79ff;
+    padding: 14px;
+    border-radius: 8px;
+    color: white;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+}
+
+.message {
+    margin-top: 20px;
+    font-weight: bold;
+}

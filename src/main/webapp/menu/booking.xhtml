@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+
+
+<h:head>
+    <title>Boka tid</title>
+
+    <!-- CSS & JS -->
+    <h:outputStylesheet library="css" name="booking.css"/>
+    <h:outputScript library="js" name="booking.js" />
+
+</h:head>
+
+<h:body>
+
+    <h1 class="title">Boka tid</h1>
+    <p class="subtitle">Välj datum och tid. Bekräftelse visas efter skickad bokning.</p>
+
+    <div class="wrapper">
+
+        <!-- 🗓️ KALENDER (vänster) -->
+        <div class="calendar-box">
+
+            <div class="calendar-header">
+                <button id="prevMonth" class="cal-btn">‹</button>
+                <h2 id="monthTitle"></h2>
+                <button id="nextMonth" class="cal-btn">›</button>
+            </div>
+
+            <div id="dayNames" class="day-names"></div>
+            <div id="calendarDays" class="calendar-grid"></div>
+
+            <!-- Hidden input -->
+            <h:form id="dateForm">
+                <h:inputHidden id="selectedDate" value="#{bookingBean.selectedDateString}" />
+
+                <h:commandButton id="ajaxUpdate"
+                                 action="#{bookingBean.updateDateFromString}"
+                                 style="display:none;"
+                                 update=":timeForm"/>
+            </h:form>
+        </div>
+
+        <!-- 🕒 FORMULÄR (höger) -->
+        <div class="form-box">
+
+            <h:form id="timeForm">
+
+                <div class="form-row">
+                    <label>Tid</label>
+                    <h:selectOneMenu value="#{bookingBean.selectedTime}" styleClass="input">
+                        <f:selectItem itemLabel="Välj tid..." noSelectionOption="true"/>
+                        <ui:repeat value="#{bookingBean.availableTimes}" var="t">
+                            <f:selectItem itemValue="#{t}" itemLabel="#{t}"/>
+                        </ui:repeat>
+                    </h:selectOneMenu>
+                </div>
+
+                <div class="form-row">
+                    <label>Namn</label>
+                    <h:inputText value="#{bookingBean.name}" styleClass="input"/>
+                </div>
+
+                <div class="form-row">
+                    <label>E-post</label>
+                    <h:inputText value="#{bookingBean.email}" styleClass="input"/>
+                </div>
+
+                <div class="form-row">
+                    <label>Telefon</label>
+                    <h:inputText value="#{bookingBean.phone}" styleClass="input"/>
+                </div>
+
+                <h:commandButton value="Boka"
+                                 action="#{bookingBean.submitBooking}"
+                                 update=":msg"
+                                 styleClass="btn"/>
+            </h:form>
+
+            <h:panelGroup id="msg">
+                <h:outputText value="#{bookingBean.message}"
+                              rendered="#{not empty bookingBean.message}"
+                              styleClass="message"/>
+            </h:panelGroup>
+
+        </div>
+
+    </div>
+
+</h:body>
+</html>

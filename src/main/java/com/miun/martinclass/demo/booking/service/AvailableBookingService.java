@@ -10,19 +10,24 @@ import java.util.List;
 @ApplicationScoped
 public class AvailableBookingService {
 
-    /**
-     * Mock-version: returnerar fasta tider för demonstration
-     * Den här kommer ersättas av riktig logik i JOB 3.
-     */
-    public List<LocalTime> getAvailableBookingForDate(LocalDate date, int groupSize) {
+    public List<LocalTime> getAvailableBookingForDate(LocalDate date) {
 
         List<LocalTime> times = new ArrayList<>();
+        LocalTime start;
+        LocalTime end;
 
-        // Exempel på restaurangens öppettider
-        LocalTime start = LocalTime.of(10, 0);
-        LocalTime end   = LocalTime.of(22, 0);
+        switch (date.getDayOfWeek()) {
+            case SUNDAY -> { return times; } // stängt
+            case SATURDAY -> {
+                start = LocalTime.of(11, 0);
+                end = LocalTime.of(16, 30);
+            }
+            default -> {
+                start = LocalTime.of(9, 0);
+                end = LocalTime.of(18, 0);
+            }
+        }
 
-        // Varje 30 minuter: 10:00, 10:30, 11:00...
         LocalTime t = start;
         while (!t.isAfter(end)) {
             times.add(t);
@@ -32,4 +37,3 @@ public class AvailableBookingService {
         return times;
     }
 }
-
