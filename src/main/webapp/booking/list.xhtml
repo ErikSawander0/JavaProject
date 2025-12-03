@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <title>Restaurant Booking</title>
+    <h:outputStylesheet library="css" name="booking.css"/>
+</h:head>
+<h:body>
+    <div class="booking-container">
+        <h1>Make a Reservation</h1>
+
+        <!-- Error Message -->
+        <h:panelGroup rendered="#{not empty bookingBean.errorMessage}">
+            <div class="error-message">
+                #{bookingBean.errorMessage}
+            </div>
+        </h:panelGroup>
+
+        <!-- Step 1: Party Size -->
+        <h:panelGroup rendered="#{not bookingBean.showDateSelection and not bookingBean.showConfirmation}">
+            <div class="step-container">
+                <h2>How many people?</h2>
+                <h:form>
+                    <div class="form-group">
+                        <h:inputText id="partySize"
+                                     value="#{bookingBean.partySize}"
+                                     styleClass="form-control"
+                                     required="true"
+                                     requiredMessage="Party size is required">
+                            <f:validateLongRange minimum="1" maximum="6"/>
+                        </h:inputText>
+                        <label for="partySize">Party Size (max 6)</label>
+                    </div>
+                    <h:commandButton value="Find Available Dates"
+                                     action="#{bookingBean.startBooking}"
+                                     styleClass="btn btn-primary"/>
+                </h:form>
+            </div>
+        </h:panelGroup>
+
+        <!-- Step 2: Date Selection -->
+        <h:panelGroup rendered="#{bookingBean.showDateSelection and not bookingBean.showConfirmation}">
+            <div class="step-container">
+                <h2>Select a Date (Party of #{bookingBean.partySize})</h2>
+                <h:form>
+                    <div class="date-grid">
+                        <ui:repeat value="#{bookingBean.availableDates}" var="dateOption">
+                            <h:commandButton value="#{dateOption.formattedDate}"
+                                             action="#{bookingBean.selectDate(dateOption.date)}"
+                                             styleClass="date-button #{dateOption.fullyBooked ? 'fully-booked' : ''} #{bookingBean.selectedDate eq dateOption.date ? 'selected' : ''}"
+                                             disabled="#{dateOption.fullyBooked}"/>
+                        </ui:repeat>
+                    </div>
+                </h:form>
+
+                <!-- Step 3: Time Selection and Details (shows after date is selected) -->
+                <h:panelGroup rendered="#{bookingBean.showTimeSelection}">
+                    <h:form styleClass="booking-details-form">
+                        <h3>Available Times for #{bookingBean.selectedDate}</h3>
+                        <div class="time-grid">
+                            <ui:repeat value="#{bookingBean.availableTimes}" var="time">
+                                <h:commandButton value="#{time}"
+                                                 action="#{bookingBean.selectTime(time)}"
+                                                 styleClass="time-button #{bookingBean.selectedTime eq time ? 'selected' : ''}"/>
+                            </ui:repeat>
+                        </div>
+
+                        <h:panelGroup rendered="#{bookingBean.selectedTime != null}">
+                            <div class="form-group">
+                                <h:inputText id="customerName"
+                                             value="#{bookingBean.customerName}"
+                                             styleClass="form-control"
+                                             required="true"/>
+                                <label for="customerName">Your Name</label>
+                            </div>
+
+                            <div class="form-group">
+                                <h:inputText id="phoneNumber"
+                                             value="#{bookingBean.phoneNumber}"
+                                             styleClass="form-control"
+                                             required="true"/>
+                                <label for="phoneNumber">Phone Number</label>
+                            </div>
+
+                            <div class="button-group">
+                                <h:commandButton value="Confirm Booking"
+                                                 action="#{bookingBean.confirmBooking}"
+                                                 styleClass="btn btn-success"/>
+                                <h:commandButton value="Start Over"
+                                                 action="#{bookingBean.reset}"
+                                                 styleClass="btn btn-secondary"
+                                                 immediate="true"/>
+                            </div>
+                        </h:panelGroup>
+                    </h:form>
+                </h:panelGroup>
+            </div>
+        </h:panelGroup>
+
+        <!-- Confirmation -->
+        <h:panelGroup rendered="#{bookingBean.showConfirmation}">
+            <div class="confirmation-container">
+                <div class="success-icon">✓</div>
+                <h2>Booking Confirmed!</h2>
+                <div class="confirmation-details">
+                    <p><strong>Name:</strong> #{bookingBean.customerName}</p>
+                    <p><strong>Party Size:</strong> #{bookingBean.partySize} people</p>
+                    <p><strong>Date:</strong> #{bookingBean.selectedDate}</p>
+                    <p><strong>Time:</strong> #{bookingBean.selectedTime}</p>
+                    <p><strong>Phone:</strong> #{bookingBean.phoneNumber}</p>
+                </div>
+                <h:form>
+                    <h:commandButton value="Make Another Booking"
+                                     action="#{bookingBean.reset}"
+                                     styleClass="btn btn-primary"/>
+                </h:form>
+            </div>
+        </h:panelGroup>
+    </div>
+</h:body>
+</html>

@@ -80,5 +80,6 @@ public class MenuItem {
         this.allergens = allergens;
     }
 
+
     // Getters/setters...
 }
