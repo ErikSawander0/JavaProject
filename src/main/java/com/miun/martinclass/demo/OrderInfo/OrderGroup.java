@@ -3,24 +3,40 @@ package com.miun.martinclass.demo.OrderInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-class Order{
-
-}
 public class OrderGroup {
-    private int Id;
-    private int table;
-    private List<Order> Orders = new ArrayList<>();
-    public List<Order> getOrders(){
+    private List<SimpleOrder> Orders = new ArrayList<>();
+
+    private long id;
+    private long groupID;
+    private boolean isDone;
+
+    public long getID(){
+        return id;
+    }
+    public void setID(long inID){
+        this.id = inID;
+    }
+
+    public long getGroupID(){
+        return groupID;
+    }
+    public void setGroupID(long inGroupID){
+        this.groupID = inGroupID;
+    }
+
+    public boolean getIsDone() {
+        return isDone;
+    }
+    public void setIsDone(boolean inIsDone) {
+        this.isDone = inIsDone;
+    }
+
+    public List<SimpleOrder> getOrders() {
+
         return Orders;
     }
-    public int getId(){
-        return Id;
-    }
-    public void setId(int id){
-        this.Id = id;
-    }
-    public void setOrders(List<Order> Orders){
-        this.Orders= Orders;
+    public void setOrders(List<SimpleOrder> Orders){
+        this.Orders = Orders;
     }
 
 }
