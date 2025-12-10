@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderGroup {
-    private List<SimpleOrder> orders = new ArrayList<>();
+    private List<FinalOrder> orders = new ArrayList<>();
 
     private long id;
     private long groupID;
     private boolean isDone;
+
 
     public long getID(){
         return id;
@@ -33,12 +34,12 @@ public class OrderGroup {
         this.isDone = inIsDone;
     }
 
-    public List<SimpleOrder> getOrders() {
+    public List<FinalOrder> getOrders() {
 
         return orders;
     }
 
-    public void setOrders(List<SimpleOrder> inOrders){
+    public void setOrders(List<FinalOrder> inOrders){
         this.orders = inOrders;
     }
 }
