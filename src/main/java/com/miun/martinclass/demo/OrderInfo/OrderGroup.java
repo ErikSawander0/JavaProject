@@ -1,12 +1,19 @@
 package com.miun.martinclass.demo.OrderInfo;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class OrderGroup {
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FinalOrder> orders = new ArrayList<>();
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     private long groupID;
     private boolean isDone;
 

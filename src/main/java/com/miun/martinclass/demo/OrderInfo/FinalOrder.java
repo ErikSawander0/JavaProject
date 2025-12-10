@@ -1,5 +1,7 @@
 package com.miun.martinclass.demo.OrderInfo;
 
+import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -7,10 +9,18 @@ class SimpleOrder{//TODO delete me, represents what was told to be MenuItem
 
 };
 
+@Entity
 public class FinalOrder {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long FOid;
+    @Transient
     private SimpleOrder original;
+
+    @ElementCollection
     private List<String> selectedAllergens;
+
     private String orderInstructions;
     private String orderMODType;
     private int orderAmmount;
