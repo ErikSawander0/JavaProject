@@ -7,7 +7,7 @@ import java.util.List;
 
 class SimpleOrder{//TODO delete me, represents what was told to be MenuItem
 
-};
+}
 
 @Entity
 public class FinalOrder {
