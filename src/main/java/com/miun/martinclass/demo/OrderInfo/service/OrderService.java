@@ -14,10 +14,11 @@ public class OrderService {
 
     @PersistenceContext(unitName = "default")
     private EntityManager em;
-    public void saveOrder(OrderGroup orderGroup) {
+    public  long saveOrder(OrderGroup orderGroup) {
         em.persist(orderGroup);
+        em.flush();
+        return orderGroup.getID();
     }
-
     public List<OrderGroup> getOrders() {
         return em.createQuery("SELECT m FROM OrderGroup m",  OrderGroup.class).getResultList();
     }
@@ -33,4 +34,13 @@ public class OrderService {
             og.setIsDone(true);
         }
     }
+    public boolean isOrderDone(Long orderGroupId) {
+        OrderGroup og = em.find(OrderGroup.class, orderGroupId);
+        if (og != null) {
+            return og.getIsDone();
+        } else {
+            throw new IllegalArgumentException("OrderGroup with ID " + orderGroupId + " not found");
+        }
+    }
+
 }

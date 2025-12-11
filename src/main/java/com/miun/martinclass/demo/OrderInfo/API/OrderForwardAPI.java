@@ -24,4 +24,18 @@ public class OrderForwardAPI {
 
         return Response.ok(forwardedOrders).build();
     }
+    @GET
+    @Path("/{id}/isDone")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response checkIfDone(@PathParam("id") Long id) {
+        try {
+            boolean done = orderService.isOrderDone(id);
+            return Response.ok("{\"isDone\":" + done + "}").build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity("{\"error\":\"" + e.getMessage() + "\"}")
+                    .build();
+        }
+    }
+
 }
