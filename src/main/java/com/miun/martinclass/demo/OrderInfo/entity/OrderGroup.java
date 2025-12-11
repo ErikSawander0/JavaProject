@@ -1,9 +1,6 @@
 package com.miun.martinclass.demo.OrderInfo.entity;
 
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +9,7 @@ import java.util.List;
 @Table(name = "order_groups")
 public class OrderGroup {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ElementCollection
     private List<SimpleOrder> Orders = new ArrayList<>();
@@ -21,9 +19,6 @@ public class OrderGroup {
 
     public long getID(){
         return id;
-    }
-    public void setID(long inID){
-        this.id = inID;
     }
 
     public long getGroupID(){
