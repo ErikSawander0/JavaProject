@@ -22,11 +22,23 @@ public class MenuItem {
     @ManyToMany(mappedBy = "menuItems")
     private List<DailyMenu> weeklyMenus;
 
+    @ManyToMany(mappedBy = "menuItems")
+    private List<CarteMenu> carteMenus;
+
+    @OneToOne(mappedBy = "menuItem", fetch = FetchType.LAZY)
+    private CarteAtributes carteAtributes;
     // Getters
     public Long getId() {
         return id;
     }
 
+    public CarteAtributes getCarteAtributes() {
+        return carteAtributes;
+    }
+
+    public void setCarteAtributes(CarteAtributes carteAtributes) {
+        this.carteAtributes = carteAtributes;
+    }
     public String getName() {
         return name;
     }

@@ -1,6 +1,8 @@
-package com.miun.martinclass.demo.OrderInfo;
+package com.miun.martinclass.demo.OrderInfo.API;
 
 
+import com.miun.martinclass.demo.OrderInfo.service.OrderService;
+import com.miun.martinclass.demo.OrderInfo.entity.OrderGroup;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -24,5 +26,11 @@ public class OrderCaptureAPI
         return Response.accepted().build();
     }
 
+    @PUT
+    @Path("/{id}/reset")
+    public Response resetDoneStatus(@PathParam("id") Long id) {
+        service.markOrderasDone(id);
+        return Response.ok().build();
+    }
 }
 

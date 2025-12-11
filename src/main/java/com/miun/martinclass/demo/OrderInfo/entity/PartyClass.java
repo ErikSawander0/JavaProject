@@ -1,4 +1,4 @@
-package com.miun.martinclass.demo.PointOfSale;
+package com.miun.martinclass.demo.OrderInfo.entity;
 
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;

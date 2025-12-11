@@ -1,12 +1,21 @@
-package com.miun.martinclass.demo.OrderInfo;
+package com.miun.martinclass.demo.OrderInfo.entity;
+
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "order_groups")
 public class OrderGroup {
+    @Id
+    private Long id;
+    @ElementCollection
     private List<SimpleOrder> Orders = new ArrayList<>();
 
-    private long id;
     private long groupID;
     private boolean isDone;
 
@@ -31,12 +40,17 @@ public class OrderGroup {
         this.isDone = inIsDone;
     }
 
-    public List<SimpleOrder> getOrders() {
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+    public List<SimpleOrder> getOrders() {
         return Orders;
     }
     public void setOrders(List<SimpleOrder> Orders){
         this.Orders = Orders;
     }
-
 }

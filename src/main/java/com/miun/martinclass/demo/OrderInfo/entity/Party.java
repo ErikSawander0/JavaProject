@@ -1,8 +1,6 @@
-package com.miun.martinclass.demo.PointOfSale;
+package com.miun.martinclass.demo.OrderInfo.entity;
 
 import jakarta.persistence.*;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "party")

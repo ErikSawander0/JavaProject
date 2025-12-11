@@ -1,16 +1,14 @@
-package com.miun.martinclass.demo.OrderInfo;
+package com.miun.martinclass.demo.OrderInfo.API;
 
-import com.miun.martinclass.demo.bookings.entity.Booking;
+import com.miun.martinclass.demo.OrderInfo.service.OrderService;
+import com.miun.martinclass.demo.OrderInfo.entity.OrderGroup;
 
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Path("/forwardsTo")
 public class OrderForwardAPI {
@@ -22,7 +20,7 @@ public class OrderForwardAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getForwardedOrders() {
 
-        List<OrderGroup> forwardedOrders = orderService.getOrders();
+        List<OrderGroup> forwardedOrders = orderService.getActiveOrders();
 
         return Response.ok(forwardedOrders).build();
     }
