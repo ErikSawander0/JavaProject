@@ -1,4 +1,5 @@
 package com.miun.martinclass.demo.menu.service;
+import com.miun.martinclass.demo.OrderInfo.entity.CarteMenuItem;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
 import com.miun.martinclass.demo.menu.entity.DailyMenu;
 import jakarta.ejb.Stateless;
@@ -159,5 +160,18 @@ public class MenuService {
             dailyMenu.getMenuItems().remove(menuItem);
             em.merge(dailyMenu);
         }
+    }
+    public List<CarteMenuItem> getActiveCarteMenuItems() {
+        return em.createQuery("""
+        SELECT new com.miun.martinclass.demo.OrderInfo.entity.CarteMenuItem(
+            m.id, m.name, m.description, m.price, m.isVegan, m.isGlutenFree, m.allergens,
+            c.id, c.activeTime, c.waitingTime, c.isMeat,
+            c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
+        )
+        FROM CarteMenu cm
+        JOIN cm.menuItems m
+        LEFT JOIN CarteAtributes c
+        WHERE cm.active = TRUE
+    """, CarteMenuItem.class).getResultList();
     }
 }
