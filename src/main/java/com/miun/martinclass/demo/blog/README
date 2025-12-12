@@ -1,0 +1,83 @@
+About Git:
+Create a branch, branch button in the top left, causes a dropdown where you see "+new branch", this will create a new
+branch which is fully isolated from the rest of the project.
+Always name your branch using the format; feature/<featureName>
+
+Add your java classes
+Place your classes in a package
+    package -> class
+
+    service → Service classes (Functions that interacts with db)
+    api → API classes (probably not needed for now)
+    entity → Database entity objects
+    web → Beans (backing beans, functions for the XHTML page)
+
+(These first two steps are already done for you this time.)
+
+About the packages: (PS: If you see @ that class is prolly doing something to the db)
+Entity classes usually contain several annotations (@) as described in the Jakarta overview. They are just objects representing tables.
+
+Service classes act as the middle layer between the database and the rest of the application. They include methods such
+as getters/setters tide to @ functions since they interact with the DB.
+
+Beans follow a getter-based structure and pass information to the XHTML pages. Their functions provide data and logic for the UI.
+
+About git operations:
+The workflow for saving and submitting your work is; commit -> push -> pullrequest. These operations will apply to the
+branch you are in, so make sure you are in your designated branch. To the left of intelij there is a bar with the following;
+project, commit and pull.
+These do generally what you think they do. Remember the push will only push commited changes so something must be
+commited to be pushed. Never be scared of doing either 3 of these, the only thing to avoid is pushing/submitting something
+that has syntax errors.
+
+Commit
+Save your changes locally—think of it like pressing Ctrl+S.
+
+Push
+Upload your committed changes to the remote repository once you're satisfied with the progress.
+
+Pull Request
+When you’re fully finished, create a pull request.
+Nothing will happen until Erik approves it, so this step simply submits your work for review.
+
+
+
+
+
+
+
+
+Blog-Site Interaction Guidelines (For BEAN & Service Teams)
+
+As we discussed in class, the interaction between the blog and the site isn’t very complicated—but it can seem tricky at first.
+To make it easier, here’s generally how the logic flows: Db -> Service -> Bean -> Site
+
+You will need to figure out the implementation yourself, but here are some general guidelines:
+    Study the existing services and beans. Look at what’s declared in other service or bean classes and why it’s there.
+
+    The service layer connects the application and the database. It both receives data from the database and sends data to it.
+
+    The bean layer more or less sends data to the website (XHTML). Study previous beans to see how they generally work.
+
+Implementation Notes for BEAN:
+For now, you do not have access to the real database information. You can create simple dummy functions that forward data from the DB entries.
+
+This should be relatively straightforward, except for images, where you will need to understand what a 'blob' is in relation to Payara and Jakarta.
+
+About Jakarta Syntax (@ annotations):
+    The @ annotations come from Jakarta and are used for many things, but in our case, they mainly help map objects to database entries.
+
+    Whenever you see an @ sign, take note of where it is and what it might be doing. Its effect depends on the context, e.g.,
+marking IDs, table names, relationships, or other database mappings.
+
+    When wondering what the database represents, look at the entity classes—each instance of an entity corresponds to a row
+in the database. Basically, we aren’t feeding the database lines manually like in the db course; we feed it the literal
+objects, and Jakarta handles the underlying work.
+
+Look at the Entity package:
+    Entities contain constructors and fields representing the actual data stored in the database.
+
+    If you’re unsure what data exists, check the entity classes.
+
+General Guidelines:
+    Do not modify the database implementation itself. Use the service layer to interact with the DB; the underlying DB structure should remain untouched.
