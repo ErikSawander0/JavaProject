@@ -5,22 +5,35 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-public class blogEntry {
+public class BlogEntry {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
+    @Column(nullable = false, length = 255)
     private String title;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String entry;
-    private String picture;//Note that this is the image, the blob we spoke of
-    LocalDateTime date;
+
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private byte[] picture;//Note that this is the image, the blob we spoke of
+
+    @Column(nullable = false)
+    private LocalDateTime date;
+
+    @PrePersist
+    protected void onCreate() {
+        this.date = LocalDateTime.now();
+    }
 
     public String getName() {
         return name;
     }
-    public LocalDateTime getdate() {
+    public LocalDateTime getDate() {
         return date;
     }
     public Long getId() {
@@ -29,7 +42,7 @@ public class blogEntry {
     public String getTitle() {
         return title;
     }
-    public String getpicture() {
+    public byte[] getPicture() {
         return picture;
     }
     public String getEntry() {
@@ -43,7 +56,7 @@ public class blogEntry {
         this.title = title;
     }
     public void setDate(LocalDateTime date) {
-        this.date = date;
+        this.date = LocalDateTime.now();
     }
     public void setName(String name) {
         this.name = name;
@@ -51,7 +64,7 @@ public class blogEntry {
     public void setEntry(String entry) {
         this.entry = entry;
     }
-    public void setPicture(String picture) {
+    public void setPicture(byte[] picture) {
         this.picture = picture;
     }
 }
