@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core"
+      lang="sv">
+
+<h:head>
+    <meta charset="UTF-8"/>
+    <title>Event &amp; Blogg – Antons Skafferi</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="#{request.contextPath}/resources/css/blog.css" />
+</h:head>
+
+<h:body>
+
+    <h1>ANTONS SKAFFERI</h1>
+    <div class="subtitle">Kommande Event &amp; Blogginlägg</div>
+
+    <div class="navbar">
+        <div class="nav-links">
+            <a href="/demo/menu/list.xhtml">Meny</a>
+            <a href="/demo/booking/booking.xhtml">Boka Bord</a>
+            <a href="/demo/about.xhtml">Om oss</a>
+            <a href="/demo/blog.xhtml">Event &amp; Blogg</a>
+        </div>
+    </div>
+
+    <div class="blog-container">
+
+        <ui:repeat value="#{blogBean.dummyData}" var="post">
+            <div class="event-card">
+                <div class="event-title">#{post.title}</div>
+                <div class="event-date">
+                    #{post.date.toLocalDate()}
+                </div>
+                <p class="event-text">#{post.entry}</p>
+            </div>
+        </ui:repeat>
+
+    </div>
+
+</h:body>
+</html>
