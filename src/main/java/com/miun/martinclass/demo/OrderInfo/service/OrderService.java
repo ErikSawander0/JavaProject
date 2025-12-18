@@ -43,4 +43,10 @@ public class OrderService {
         }
     }
 
+    public List<Long> findActiveGroupIds() {
+        return em.createQuery(
+                "SELECT DISTINCT o.id FROM OrderGroup o WHERE o.isDone = false",
+                Long.class
+        ).getResultList();
+    }
 }
