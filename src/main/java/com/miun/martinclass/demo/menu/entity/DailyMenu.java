@@ -38,4 +38,9 @@ public class DailyMenu {
     }
 
     // Getters/setters...
+
+    public Long getId() {
+        return id;
+    }
+
 }
