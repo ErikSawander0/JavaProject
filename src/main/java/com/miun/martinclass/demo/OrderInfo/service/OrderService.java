@@ -1,6 +1,8 @@
 package com.miun.martinclass.demo.OrderInfo.service;
 
 import com.miun.martinclass.demo.OrderInfo.entity.OrderGroup;
+import com.miun.martinclass.demo.OrderInfo.entity.SimpleOrder;
+import com.miun.martinclass.demo.menu.entity.CarteAtributes;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
@@ -48,5 +50,22 @@ public class OrderService {
                 "SELECT DISTINCT o.id FROM OrderGroup o WHERE o.isDone = false",
                 Long.class
         ).getResultList();
+    }
+
+    public void setCookTimes(OrderGroup orderGroup) {
+        for (SimpleOrder order : orderGroup.getOrders()) {
+            // Get the original menu item ID
+            Long menuItemId = order.getOriginalID();
+
+            // Query the database for carte attributes
+            String query = "SELECT ca FROM CarteAtributes ca WHERE ca.menuItem.id = :menuItemId";
+            CarteAtributes attributes = em.createQuery(query, CarteAtributes.class)
+                    .setParameter("menuItemId", menuItemId)
+                    .getSingleResult();
+
+            // Set the times on the order
+            order.setActiveTime(attributes.getActiveTime());
+            order.setWaitingTime(attributes.getWaitingTime());
+        }
     }
 }

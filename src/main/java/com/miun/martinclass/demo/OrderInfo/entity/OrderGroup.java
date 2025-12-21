@@ -16,7 +16,15 @@ public class OrderGroup {
 
     private long groupID;
     private boolean isDone;
+    private String modifyType;
 
+    public void setModifyType(String modifyType) {
+        this.modifyType = modifyType;
+    }
+
+    public String getModifyType() {
+        return this.modifyType;
+    }
     public long getID(){
         return id;
     }

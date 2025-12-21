@@ -9,13 +9,34 @@ import java.util.List;
 @Embeddable
 public class SimpleOrder {
     private Long id;
+    private Long originalID;
     private String name;
     private String selectedAllergens;
     private String specialInstructions;
     private String comments;
+    private Integer activeTime;        // minutes
+    private Integer waitingTime;        // minutes
     int quantity;
     LocalDateTime orderedAt;
 
+    public Long getOriginalID() {
+        return originalID;
+    }
+    public void setOriginalID(Long originalID) {
+        this.originalID = originalID;
+    }
+    public Integer getActiveTime() {
+        return activeTime;
+    }
+    public Integer getWaitingTime() {
+        return waitingTime;
+    }
+    public void setActiveTime(Integer activeTime) {
+        this.activeTime = activeTime;
+    }
+    public void setWaitingTime(Integer waitingTime) {
+        this.waitingTime = waitingTime;
+    }
     public String getName() {
         return name;
     }
