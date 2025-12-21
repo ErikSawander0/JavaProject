@@ -75,7 +75,7 @@ public class MenuService {
      * Get all weekly menus
      */
     public List<DailyMenu> getAllDailyMenus() {
-        return em.createQuery("SELECT d FROM DailyMenu d ORDER BY d.Date DESC", DailyMenu.class).getResultList();
+        return em.createQuery("SELECT d FROM DailyMenu d ORDER BY d.date DESC", DailyMenu.class).getResultList();
     }
 
     /**
@@ -115,7 +115,7 @@ public class MenuService {
      * Get the current active daily menu (most important!)
      */
     public DailyMenu getTodaysMenu() {
-        List<DailyMenu> results = em.createQuery("SELECT d FROM DailyMenu d WHERE d.Date = :date", DailyMenu.class)
+        List<DailyMenu> results = em.createQuery("SELECT d FROM DailyMenu d WHERE d.date = :date", DailyMenu.class)
                 .setParameter("date", LocalDate.now())
                 .getResultList();
 
@@ -130,7 +130,7 @@ public class MenuService {
      */
     public DailyMenu getDailyMenuForDate(LocalDate date) {
         List<DailyMenu> result = em.createQuery(
-                "SELECT d FROM DailyMenu d WHERE d.Date = :date", DailyMenu.class)
+                "SELECT d FROM DailyMenu d WHERE d.date = :date", DailyMenu.class)
                 .setParameter("date", date)
                 .getResultList();
         return result.isEmpty() ? null : result.get(0);

@@ -12,7 +12,7 @@ public class DailyMenu {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate Date;
+    private LocalDate date;
 
     @ManyToMany
     @JoinTable(
@@ -27,20 +27,23 @@ public class DailyMenu {
     }
 
     public void setId(long l) {
+        this.id = l;
     }
 
     public void setDate(LocalDate now) {
-        this.Date = now;
+        this.date = now;
     }
 
     public void setMenuItems(List<MenuItem> items) {
         this.menuItems = items;
     }
 
-    // Getters/setters...
-
     public Long getId() {
         return id;
+    }
+
+    public LocalDate getDate() {
+        return date;
     }
 
 }
