@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <title>Admin – Menyhantering</title>
+    <h:outputStylesheet library="css" name="admin.css"/>
+</h:head>
+
+<h:body>
+
+    <div class="admin-container">
+
+        <h1>Admin – Menyhantering</h1>
+
+        <!-- ========================= -->
+        <!--      MENU ITEMS LIST      -->
+        <!-- ========================= -->
+        <h2>Menyobjekt</h2>
+
+        <h:form id="menuItemsForm">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Pris</th>
+                    <th>Vegan</th>
+                    <th>Åtgärder</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <ui:repeat value="#{adminBean.menuItems}" var="item">
+                    <tr>
+                        <td>#{item.name}</td>
+                        <td>#{item.price}</td>
+                        <td>#{item.isVegan ? 'Ja' : 'Nej'}</td>
+                        <td>
+                            <h:commandButton value="Ta bort"
+                                             action="#{adminBean.removeMenuItem(item)}"
+                                             styleClass="danger-btn">
+                                <f:ajax execute="@this" render="@form"/>
+                            </h:commandButton>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+        </h:form>
+
+
+        <!-- ========================= -->
+        <!--     ADD MENU ITEM FORM   -->
+        <!-- ========================= -->
+        <h3>Lägg till menyobjekt</h3>
+
+        <h:form styleClass="form-card" id="addMenuItemForm">
+
+            <div class="form-row">
+                <label>Namn:</label>
+                <h:inputText value="#{adminBean.newMenuItem.name}" />
+            </div>
+
+            <div class="form-row">
+                <label>Beskrivning:</label>
+                <h:inputTextarea value="#{adminBean.newMenuItem.description}" rows="3"/>
+            </div>
+
+            <div class="form-row">
+                <label>Pris:</label>
+                <h:inputText value="#{adminBean.newMenuItem.price}" />
+            </div>
+
+            <div class="form-row">
+                <label>Vegan:</label>
+                <h:selectBooleanCheckbox value="#{adminBean.newMenuItem.isVegan}" />
+            </div>
+
+            <div class="form-row">
+                <label>Allergener:</label>
+                <h:inputText value="#{adminBean.newMenuItem.allergens}" />
+            </div>
+
+            <div class="form-row center">
+                <h:commandButton value="Lägg till"
+                                 action="#{adminBean.addMenuItem}"
+                                 styleClass="primary-btn">
+                    <f:ajax execute="@form" render="@form :menuItemsForm"/>
+                </h:commandButton>
+            </div>
+
+        </h:form>
+
+
+        <!-- ========================= -->
+        <!--      DAILY MENUS LIST     -->
+        <!-- ========================= -->
+        <h2>Dagens Menyer</h2>
+
+        <h:form id="dailyMenusForm">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Antal rätter</th>
+                    <th>Åtgärder</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <ui:repeat value="#{adminBean.dailyMenus}" var="dm">
+                    <tr>
+                        <td>#{dm.date}</td>
+                        <td>#{dm.menuItems.size()}</td>
+                        <td>
+                            <h:commandButton value="Ta bort"
+                                             action="#{adminBean.removeDailyMenu(dm)}"
+                                             styleClass="danger-btn">
+                                <f:ajax execute="@this" render="@form"/>
+                            </h:commandButton>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+        </h:form>
+
+
+        <!-- ========================= -->
+        <!--   CREATE DAILY MENU FORM  -->
+        <!-- ========================= -->
+        <h3>Skapa ny Dagens meny</h3>
+
+        <h:form styleClass="form-inline" id="createDailyMenuForm">
+            <label>Datum:</label>
+            <h:inputText type="date" value="#{adminBean.newDailyMenu.date}" />
+
+            <h:commandButton value="Skapa"
+                             action="#{adminBean.addDailyMenu}"
+                             styleClass="primary-btn">
+                <f:ajax execute="@form" render="@form :dailyMenusForm" resetValues="true"/>
+            </h:commandButton>
+        </h:form>
+
+
+        <!-- ========================= -->
+        <!-- ADD ITEM TO DAILY MENU    -->
+        <!-- ========================= -->
+        <h3>Lägg till rätt i dagens meny</h3>
+
+        <h:form styleClass="form-inline" id="addItemToDailyMenuForm">
+
+            <label>Menyobjekt:</label>
+            <h:selectOneMenu value="#{adminBean.selectedMenuItemId}">
+                <f:selectItems value="#{adminBean.menuItems}" var="i"
+                               itemValue="#{i.id}" itemLabel="#{i.name}"/>
+            </h:selectOneMenu>
+
+            <label>Dagens meny:</label>
+            <h:selectOneMenu value="#{adminBean.selectedDailyMenuId}">
+                <f:selectItems value="#{adminBean.dailyMenus}" var="dm"
+                               itemValue="#{dm.id}" itemLabel="#{dm.date}"/>
+            </h:selectOneMenu>
+
+            <h:commandButton value="Lägg till"
+                             action="#{adminBean.addItemToDailyMenu}"
+                             styleClass="primary-btn">
+                <f:ajax execute="@form" render=":dailyMenusForm"/>
+            </h:commandButton>
+
+        </h:form>
+
+    </div>
+
+</h:body>
+</html>

@@ -1,168 +1,199 @@
 package com.miun.martinclass.demo.admin;
 
-import com.miun.martinclass.demo.OrderInfo.service.CarteService;
 import com.miun.martinclass.demo.menu.entity.CarteMenu;
 import com.miun.martinclass.demo.menu.entity.DailyMenu;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
-import com.miun.martinclass.demo.menu.service.MenuService;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-//Remember to use the correct @ over whatever class or function who wants it.
+@Named("adminBean")
+@ViewScoped
 public class AdminBean implements Serializable {
 
-    private MenuService menuService;
-    private CarteService carteService;
-
+    private static final long serialVersionUID = 1L;
     private List<MenuItem> menuItems;
     private List<DailyMenu> dailyMenus;
     private List<CarteMenu> carteMenus;
-
-    private MenuItem selectedMenuItem;
-    private DailyMenu selectedDailyMenu;
-    private CarteMenu selectedCarteMenu;
-
     private MenuItem newMenuItem = new MenuItem();
     private DailyMenu newDailyMenu = new DailyMenu();
     private CarteMenu newCarteMenu = new CarteMenu();
-
     private Long selectedMenuItemId;
     private Long selectedDailyMenuId;
     private Long selectedCarteMenuId;
 
-    /* TODO: Create a function to initialize the bean:
-    public void initFunction() {
-        // call to reloadData()
-    } */
 
-    /* TODO: Create a function to reload all collections:
-    public void reloadDataFunction() {
-        // logic to fetch menuItems, dailyMenus, carteMenus
-    } */
+    // INIT — LOAD DUMMY DATA
+    @PostConstruct
+    public void init() {
 
-    /* TODO: Create a function to add a new MenuItem:
-    public void addMenuItemFunction() {
-        // logic to save newMenuItem
-    } */
+        // ------- MENU ITEMS -------
+        menuItems = new ArrayList<>();
 
-    /* TODO: Create a function to update a selected MenuItem:
-    public void updateMenuItemFunction() {
-        // logic to update selectedMenuItem
-    } */
+        MenuItem m1 = new MenuItem();
+        m1.setId(1L);
+        m1.setName("Plankstek");
+        m1.setDescription("Oxfilé med tillbehör");
+        m1.setPrice(BigDecimal.valueOf(295));
+        m1.setIsVegan(false);
 
-    /* TODO: Create a function to remove a MenuItem:
-    public void removeMenuItemFunction(MenuItem item) {
-        // logic to delete item by id
-    } */
+        MenuItem m2 = new MenuItem();
+        m2.setId(2L);
+        m2.setName("Toast Skagen");
+        m2.setDescription("Handskalade räkor");
+        m2.setPrice(BigDecimal.valueOf(165));
+        m2.setIsVegan(false);
 
-    /* TODO: Create a function to add a new DailyMenu:
-    public void addDailyMenuFunction() {
-        // logic to save newDailyMenu
-    } */
+        menuItems.add(m1);
+        menuItems.add(m2);
 
-    /* TODO: Create a function to remove a DailyMenu:
-    public void removeDailyMenuFunction(DailyMenu menu) {
-        // logic to delete menu by id
-    } */
 
-    /* TODO: Create a function to add a MenuItem to a DailyMenu:
-    public void addMenuItemToDailyMenuFunction() {
-        // logic to add selectedMenuItemId to selectedDailyMenuId
-    } */
+        // ------- DAILY MENUS -------
+        dailyMenus = new ArrayList<>();
 
-    /* TODO: Create a function to remove a MenuItem from a DailyMenu:
-    public void removeMenuItemFromDailyMenuFunction(DailyMenu dailyMenu, MenuItem menuItem) {
-        // logic to remove menuItem from dailyMenu
-    } */
+        DailyMenu dm = new DailyMenu();
+        dm.setId(1L);
+        dm.setDate(LocalDate.now());
+        dm.setMenuItems(new ArrayList<>());
 
-    /* TODO: Create a function to add a new CarteMenu:
-    public void addCarteMenuFunction() {
-        // logic to save newCarteMenu
-    } */
+        dm.getMenuItems().add(m1);   // Add dish to todays menu
 
-    /* TODO: Create a function to remove a CarteMenu:
-    public void removeCarteMenuFunction(CarteMenu menu) {
-        // logic to delete menu by id
-    } */
+        dailyMenus.add(dm);
 
-    /* TODO: Create a function to add a MenuItem to a CarteMenu:
-    public void addMenuItemToCarteMenuFunction() {
-        // logic to add selectedMenuItemId to selectedCarteMenuId
-    } */
 
-    /* TODO: Create a function to remove a MenuItem from a CarteMenu:
-    public void removeMenuItemFromCarteMenuFunction(CarteMenu menu, MenuItem item) {
-        // logic to remove item from menu
-    } */
+        // ------- CARTE MENUS -------
+        carteMenus = new ArrayList<>();
 
-    /* TODO: Create a function to update attributes of a MenuItem:
-    public void updateCarteAttributesFunction(MenuItem item) {
-        // logic to update item
-    } */
+        CarteMenu cm = new CarteMenu();
+        cm.setId(1L);
+        cm.setName("Vintermeny");
+        cm.setMenuItems(new ArrayList<>());
 
-    /* TODO: Create a function to fetch all MenuItems:
-    public List<MenuItem> getMenuItemsFunction() {
-        // return menuItems
-    } */
+        cm.getMenuItems().add(m2);
 
-    /* TODO: Create a function to fetch all DailyMenus:
-    public List<DailyMenu> getDailyMenusFunction() {
-        // return dailyMenus
-    } */
+        carteMenus.add(cm);
+    }
 
-    /* TODO: Create a function to fetch all CarteMenus:
-    public List<CarteMenu> getCarteMenusFunction() {
-        // return carteMenus
-    } */
+    // MENU ITEM FUNCTIONS
+    public void addMenuItem() {
+        if (newMenuItem.getName() == null || newMenuItem.getName().isEmpty()) return;
 
-    /* TODO: Create getters/setters for newMenuItem:
-    public MenuItem getNewMenuItemFunction() { return newMenuItem; }
-    public void setNewMenuItemFunction(MenuItem newMenuItem) { this.newMenuItem = newMenuItem; }
-    */
+        newMenuItem.setId((long) menuItems.size() + 1);
+        menuItems.add(newMenuItem);
 
-    /* TODO: Create getters/setters for newDailyMenu:
-    public DailyMenu getNewDailyMenuFunction() { return newDailyMenu; }
-    public void setNewDailyMenuFunction(DailyMenu newDailyMenu) { this.newDailyMenu = newDailyMenu; }
-    */
+        newMenuItem = new MenuItem(); // Reset form
+    }
 
-    /* TODO: Create getters/setters for newCarteMenu:
-    public CarteMenu getNewCarteMenuFunction() { return newCarteMenu; }
-    public void setNewCarteMenuFunction(CarteMenu newCarteMenu) { this.newCarteMenu = newCarteMenu; }
-    */
+    public void removeMenuItem(MenuItem item) {
+        menuItems.remove(item);
 
-    /* TODO: Create getters/setters for selectedMenuItemId:
-    public Long getSelectedMenuItemIdFunction() { return selectedMenuItemId; }
-    public void setSelectedMenuItemIdFunction(Long selectedMenuItemId) { this.selectedMenuItemId = selectedMenuItemId; }
-    */
+        // Remove from daily menus
+        for (DailyMenu dm : dailyMenus) {
+            dm.getMenuItems().remove(item);
+        }
 
-    /* TODO: Create getters/setters for selectedDailyMenuId:
-    public Long getSelectedDailyMenuIdFunction() { return selectedDailyMenuId; }
-    public void setSelectedDailyMenuIdFunction(Long selectedDailyMenuId) { this.selectedDailyMenuId = selectedDailyMenuId; }
-    */
+        // Remove from carte menus
+        for (CarteMenu cm : carteMenus) {
+            cm.getMenuItems().remove(item);
+        }
+    }
 
-    /* TODO: Create getters/setters for selectedCarteMenuId:
-    public Long getSelectedCarteMenuIdFunction() { return selectedCarteMenuId; }
-    public void setSelectedCarteMenuIdFunction(Long selectedCarteMenuId) { this.selectedCarteMenuId = selectedCarteMenuId; }
-    */
 
-    /* TODO: Create getters/setters for selectedMenuItem:
-    public MenuItem getSelectedMenuItemFunction() { return selectedMenuItem; }
-    public void setSelectedMenuItemFunction(MenuItem selectedMenuItem) { this.selectedMenuItem = selectedMenuItem; }
-    */
+    // DAILY MENU FUNCTIONS
+    public void createDailyMenu() {
+        newDailyMenu.setId((long) dailyMenus.size() + 1);
 
-    /* TODO: Create getters/setters for selectedDailyMenu:
-    public DailyMenu getSelectedDailyMenuFunction() { return selectedDailyMenu; }
-    public void setSelectedDailyMenuFunction(DailyMenu selectedDailyMenu) { this.selectedDailyMenu = selectedDailyMenu; }
-    */
+        if (newDailyMenu.getDate() == null) {
+            newDailyMenu.setDate(LocalDate.now());
+        }
 
-    /* TODO: Create getters/setters for selectedCarteMenu:
-    public CarteMenu getSelectedCarteMenuFunction() { return selectedCarteMenu; }
-    public void setSelectedCarteMenuFunction(CarteMenu selectedCarteMenu) { this.selectedCarteMenu = selectedCarteMenu; }
-    */
+        newDailyMenu.setMenuItems(new ArrayList<>());
+
+        dailyMenus.add(newDailyMenu);
+
+        newDailyMenu = new DailyMenu(); // Reset form
+    }
+
+    public void removeDailyMenu(DailyMenu menu) {
+        dailyMenus.remove(menu);
+    }
+
+    public void addMenuItemToDailyMenu() {
+        if (selectedDailyMenuId == null || selectedMenuItemId == null) return;
+
+        DailyMenu dailyMenu = dailyMenus.stream()
+                .filter(dm -> dm.getId().equals(selectedDailyMenuId))
+                .findFirst().orElse(null);
+
+        MenuItem item = menuItems.stream()
+                .filter(mi -> mi.getId().equals(selectedMenuItemId))
+                .findFirst().orElse(null);
+
+        if (dailyMenu != null && item != null) {
+            dailyMenu.getMenuItems().add(item);
+        }
+
+        selectedDailyMenuId = null;
+        selectedMenuItemId = null;
+    }
+
+
+    // CARTE MENU FUNCTIONS
+    public void createCarteMenu() {
+        newCarteMenu.setId((long) carteMenus.size() + 1);
+        newCarteMenu.setMenuItems(new ArrayList<>());
+
+        carteMenus.add(newCarteMenu);
+
+        newCarteMenu = new CarteMenu(); // Reset
+    }
+
+    public void removeCarteMenu(CarteMenu menu) {
+        carteMenus.remove(menu);
+    }
+
+    public void addItemToCarteMenu() {
+        if (selectedCarteMenuId == null || selectedMenuItemId == null) return;
+
+        CarteMenu carteMenu = carteMenus.stream()
+                .filter(cm -> cm.getId().equals(selectedCarteMenuId))
+                .findFirst().orElse(null);
+
+        MenuItem item = menuItems.stream()
+                .filter(mi -> mi.getId().equals(selectedMenuItemId))
+                .findFirst().orElse(null);
+
+        if (carteMenu != null && item != null) {
+            carteMenu.getMenuItems().add(item);
+        }
+
+        selectedCarteMenuId = null;
+        selectedMenuItemId = null;
+    }
+
+
+
+    // GETTERS & SETTERS
+    public List<MenuItem> getMenuItems() { return menuItems; }
+    public List<DailyMenu> getDailyMenus() { return dailyMenus; }
+    public List<CarteMenu> getCarteMenus() { return carteMenus; }
+
+    public MenuItem getNewMenuItem() { return newMenuItem; }
+    public DailyMenu getNewDailyMenu() { return newDailyMenu; }
+    public CarteMenu getNewCarteMenu() { return newCarteMenu; }
+
+    public Long getSelectedMenuItemId() { return selectedMenuItemId; }
+    public void setSelectedMenuItemId(Long id) { this.selectedMenuItemId = id; }
+
+    public Long getSelectedDailyMenuId() { return selectedDailyMenuId; }
+    public void setSelectedDailyMenuId(Long id) { this.selectedDailyMenuId = id; }
+
+    public Long getSelectedCarteMenuId() { return selectedCarteMenuId; }
+    public void setSelectedCarteMenuId(Long id) { this.selectedCarteMenuId = id; }
 }
-
