@@ -31,6 +31,7 @@ public class DailyMenu {
     }
 
     public void setDate(LocalDate now) {
+        System.out.println("Setting date: " + now);
         this.date = now;
     }
 

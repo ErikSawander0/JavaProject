@@ -135,12 +135,12 @@
 
         <h:form styleClass="form-inline" id="createDailyMenuForm">
             <label>Datum:</label>
-            <h:inputText type="date" value="#{adminBean.newDailyMenu.date}" />
+            <h:inputText type="date" value="#{adminBean.newDailyMenu.date}"><f:convertDateTime type="localDate" pattern = "yyyy-MM-dd" timeZone=""/></h:inputText>
 
             <h:commandButton value="Skapa"
                              action="#{adminBean.addDailyMenu}"
                              styleClass="primary-btn">
-                <f:ajax execute="@form" render="@form :dailyMenusForm" resetValues="true"/>
+                <f:ajax execute="@form" render="@form :createDailyMenuForm" resetValues="true"/>
             </h:commandButton>
         </h:form>
 
@@ -165,9 +165,9 @@
             </h:selectOneMenu>
 
             <h:commandButton value="Lägg till"
-                             action="#{adminBean.addItemToDailyMenu}"
+                             action="#{adminBean.addMenuItemToDailyMenu}"
                              styleClass="primary-btn">
-                <f:ajax execute="@form" render=":dailyMenusForm"/>
+                <f:ajax execute="@form" render=":addItemToDailyMenuForm"/>
             </h:commandButton>
 
         </h:form>
