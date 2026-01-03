@@ -19,12 +19,13 @@ public class OrderCaptureAPI
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response capture(OrderGroup body) {
+    public Response capture() {
+        var body = new OrderGroup();
         service.setCookTimes(body);
         long id = service.saveOrder(body);
 
         return Response
-                .ok("{\"id\":" +id+ "}")
+                .ok(id)
                 .build();
     }
 
