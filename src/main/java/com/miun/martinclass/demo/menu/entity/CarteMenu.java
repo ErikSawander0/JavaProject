@@ -26,6 +26,11 @@ public class CarteMenu{
         return menuItems;
     }
 
+    public Long getId() {
+
+        return this.id;
+    }
+
     public void setId(long l) {
         this.id = l;
     }
@@ -42,5 +47,4 @@ public class CarteMenu{
         return active;
     }
 
-    // Getters/setters...
 }

@@ -2,11 +2,18 @@ package com.miun.martinclass.demo.OrderInfo.service;
 import com.miun.martinclass.demo.OrderInfo.entity.CarteMenuItem;
 import com.miun.martinclass.demo.OrderInfo.entity.OrderGroup;
 import com.miun.martinclass.demo.OrderInfo.entity.SimpleOrder;
+import com.miun.martinclass.demo.menu.entity.CarteMenu;
+import com.miun.martinclass.demo.menu.entity.MenuItem;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
 
+@Stateless
 public class CarteService {
+
+    @PersistenceContext(unitName = "default")
     private EntityManager em;
 // Add these methods to your MenuService class
     /**
@@ -20,7 +27,7 @@ public class CarteService {
                         c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
                     )
                     FROM MenuItem m
-                    LEFT JOIN CarteAtributes c ON c.menuItem.id = m.id
+                    LEFT JOIN m.carteAtributes c
                 """, CarteMenuItem.class).getResultList();
     }
 
@@ -35,7 +42,7 @@ public class CarteService {
                                 c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
                             )
                             FROM MenuItem m
-                            LEFT JOIN CarteAtributes c ON c.menuItem.id = m.id
+                            LEFT JOIN m.carteAtributes c
                             WHERE m.id = :id
                         """, CarteMenuItem.class)
                 .setParameter("id", id)
@@ -55,7 +62,7 @@ public class CarteService {
                         c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
                     )
                     FROM MenuItem m
-                    LEFT JOIN CarteAtributes c ON c.menuItem.id = m.id
+                    LEFT JOIN m.carteAtributes c
                     WHERE c.isAppetizer = true
                 """, CarteMenuItem.class).getResultList();
     }
@@ -71,7 +78,7 @@ public class CarteService {
                         c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
                     )
                     FROM MenuItem m
-                    LEFT JOIN CarteAtributes c ON c.menuItem.id = m.id
+                    LEFT JOIN m.carteAtributes c
                     WHERE c.isHuvud = true
                 """, CarteMenuItem.class).getResultList();
     }
@@ -87,10 +94,44 @@ public class CarteService {
                         c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
                     )
                     FROM MenuItem m
-                    LEFT JOIN CarteAtributes c ON c.menuItem.id = m.id
+                    LEFT JOIN m.carteAtributes c
                     WHERE c.isDessert = true
                 """, CarteMenuItem.class).getResultList();
     }
+
+    // ==== New methods for Admin ====
+    public List<CarteMenu> getAllCarteMenus() {
+        return em.createQuery("SELECT c FROM CarteMenu c", CarteMenu.class)
+                .getResultList();
+    }
+
+    public void createCarteMenu(CarteMenu menu) {
+        em.persist(menu);
+    }
+
+    public void deleteCarteMenu(Long id) {
+        CarteMenu menu = em.find(CarteMenu.class, id);
+        if (menu != null) em.remove(menu);
+    }
+
+    public void removeItemFromCarteMenu(Long carteMenuId, Long menuItemId) {
+        CarteMenu carteMenu = em.find(CarteMenu.class, carteMenuId);
+        MenuItem menuItem = em.find(MenuItem.class, menuItemId);
+        if (carteMenu != null && menuItem != null) {
+            carteMenu.getMenuItems().remove(menuItem);
+            em.merge(carteMenu);
+        }
+    }
+
+    public void addItemToCarteMenu(Long carteMenuId, Long menuItemId) {
+        CarteMenu carteMenu = em.find(CarteMenu.class, carteMenuId);
+        MenuItem menuItem = em.find(MenuItem.class, menuItemId);
+        if (carteMenu != null && menuItem != null) {
+            carteMenu.getMenuItems().add(menuItem);
+            em.merge(carteMenu);
+        }
+    }
+
 
 
 }

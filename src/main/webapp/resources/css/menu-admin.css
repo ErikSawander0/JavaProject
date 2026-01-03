@@ -1,0 +1,257 @@
+body {
+    background: #faf8f5;
+    font-family: "Georgia", serif;
+    color: #4b453e;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+}
+
+.admin-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    font-size: 50px;
+    margin-top: 120px;
+    margin-bottom: 5px;
+}
+
+h2 {
+    font-size: 28px;
+    color: #715d4c;
+    margin: 40px 0 20px 0;
+    border-bottom: 3px solid #b1966a;
+    padding-bottom: 10px;
+}
+
+h3 {
+    font-size: 25px;
+    color: #8f6e40;
+    margin: 30px 0 15px;
+    font-weight: normal;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 30px;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-table th {
+    background: #c3baaf;
+    color: white;
+    padding: 15px 12px;
+    text-align: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.admin-table td {
+    padding: 15px 12px;
+    border-bottom: 1px solid #f0ebe5;
+    background: white;
+}
+
+.form-card {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 140px 1fr;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.form-row label {
+    font-weight: bold;
+    color: #6b5848;
+    text-align: right;
+}
+
+.form-row:has(button) label,
+.form-row:has(.primary-btn) label {
+    display: none;
+}
+
+.form-inline {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.form-inline label {
+    font-weight: bold;
+    color: #6b5848;
+}
+
+
+input[type="text"],
+input[type="date"],
+textarea,
+select {
+    padding: 12px 15px;
+    border: 2px solid #e7e0d7;
+    border-radius: 8px;
+    font-family: "Georgia", serif;
+    background: #fcfbf9;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(177, 150, 106, 0.1);
+    background: white;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 90px;
+}
+
+.form-card input[type="text"],
+.form-card textarea,
+.form-card select {
+    width: 100%;
+    max-width: 500px;
+}
+
+.form-inline input[type="text"],
+.form-inline input[type="date"],
+.form-inline select {
+    min-width: 180px;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    accent-color: #b1966a;
+}
+
+select {
+    cursor: pointer;
+}
+
+.primary-btn {
+    background: #b1966a;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    font-size: 16px;
+    font-weight: normal;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    font-family: "Georgia", serif;
+    width: auto;
+    display: inline-block;
+}
+
+.primary-btn:hover {
+    background: #9d8257;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.primary-btn:active {
+    transform: translateY(0);
+}
+
+.danger-btn {
+    background: #d88c8c;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: normal;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-size: 0.9rem;
+    font-family: "Georgia", serif;
+}
+
+.danger-btn:hover {
+    background: #c76f6f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.danger-btn:active {
+    transform: translateY(0);
+}
+
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 36px;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    .form-row label {
+        text-align: left;
+    }
+
+    .form-card input[type="text"],
+    .form-card textarea,
+    .form-card select {
+        max-width: 100%;
+    }
+
+    .form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-inline input,
+    .form-inline select {
+        width: 100%;
+    }
+
+    .admin-table {
+        font-size: 0.9rem;
+    }
+
+    .admin-table th,
+    .admin-table td {
+        padding: 10px 8px;
+    }
+}
