@@ -30,7 +30,7 @@
 
     <div class="blog-container">
 
-        <ui:repeat value="#{blogBean.dummyData}" var="post">
+        <ui:repeat value="#{blogBean.allBlogEntries}" var="post">
             <div class="event-card">
                 <div class="event-title">#{post.title}</div>
                 <div class="event-date">
