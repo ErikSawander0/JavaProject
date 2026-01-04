@@ -8,6 +8,7 @@ import jakarta.inject.Named;
 import jakarta.servlet.http.Part;
 
 import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import java.util.ArrayList;
@@ -82,29 +83,11 @@ public class BlogBean {
         this.blogId = blogId;
     }
 
-    public List<BlogEntry> getDummyData() {
-        List<BlogEntry> list = new ArrayList<>();
-
-        BlogEntry e1 = new BlogEntry();
-        e1.setTitle("Live Musik – Jazzkväll");
-        e1.setEntry("En stämningsfull kväll med livemusik i vår mysiga matsal.");
-        e1.setDate(LocalDateTime.now().minusDays(1));
-
-        BlogEntry e2 = new BlogEntry();
-        e2.setTitle("Vinprovning med sommelier");
-        e2.setEntry("Upptäck smakrika viner tillsammans med vår sommelier.");
-        e2.setDate(LocalDateTime.now().minusDays(3));
-
-        BlogEntry e3 = new BlogEntry();
-        e3.setTitle("Söndagsbrunch");
-        e3.setEntry("Vår populära brunchbuffé – perfekt för hela familjen!");
-        e3.setDate(LocalDateTime.now().minusDays(7));
-
-        list.add(e1);
-        list.add(e2);
-        list.add(e3);
-
-        return list;
+    public String getPictureAsBase64(byte[] picture) {
+        if (picture == null || picture.length == 0) {
+            return ""; // optionally return a placeholder image
+        }
+        return Base64.getEncoder().encodeToString(picture);
     }
 
 }

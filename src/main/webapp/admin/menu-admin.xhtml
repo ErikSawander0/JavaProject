@@ -172,6 +172,72 @@
 
         </h:form>
 
+        <h2>Admin – Blogginlägg</h2>
+        <h:form id="blogEntriesForm">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Bild</th>
+                    <th>Titel</th>
+                    <th>Datum</th>
+                    <th>Åtgärder</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <ui:repeat value="#{adminBean.blogEntries}" var="blog">
+                    <tr>
+                        <td>
+                            <h:graphicImage value="data:image/png;base64,#{adminBean.getPictureAsBase64(blog.picture)}" width="50"/>
+                        </td>
+                        <td>#{blog.title}</td>
+                        <td>#{blog.date}</td>
+                        <td>
+                            <h:commandButton value="Ta bort"
+                                             action="#{adminBean.removeBlogEntry(blog)}"
+                                             styleClass="danger-btn">
+                                <f:ajax execute="@this" render="@form"/>
+                            </h:commandButton>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+        </h:form>
+
+        <h3>Skapa nytt inlägg</h3>
+        <h:form styleClass="form-card" id="addBlogEntryForm" enctype="multipart/form-data">
+
+            <div class="form-row">
+                <label>Titel:</label>
+                <h:inputText value="#{adminBean.newBlogEntry.title}" />
+            </div>
+
+            <div class="form-row">
+                <label>Författare:</label>
+                <h:inputText value="#{adminBean.newBlogEntry.name}" />
+            </div>
+
+            <div class="form-row">
+                <label>Text:</label>
+                <h:inputTextarea value="#{adminBean.newBlogEntry.entry}" rows="5"/>
+            </div>
+
+            <div class="form-row">
+                <label>Bild:</label>
+                <h:inputFile value="#{adminBean.uploadedPicture}" />
+            </div>
+
+            <div class="form-row center">
+                <h:commandButton value="Publicera"
+                                 action="#{adminBean.addBlogEntry}"
+                                 styleClass="primary-btn">
+                    <f:ajax execute="@form" render="@form :addBlogEntryForm"/>
+                </h:commandButton>
+            </div>
+
+        </h:form>
+
     </div>
 
 </h:body>

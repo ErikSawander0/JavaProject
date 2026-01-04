@@ -33,6 +33,7 @@
         <ui:repeat value="#{blogBean.allBlogEntries}" var="post">
             <div class="event-card">
                 <div class="event-title">#{post.title}</div>
+                <div class="event-image"><h:graphicImage value="data:image/png;base64,#{blogBean.getPictureAsBase64(post.picture)}"/></div>
                 <div class="event-date">
                     #{post.date.toLocalDate()}
                 </div>

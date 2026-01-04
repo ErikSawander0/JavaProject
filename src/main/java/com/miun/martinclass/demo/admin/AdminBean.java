@@ -1,6 +1,8 @@
 package com.miun.martinclass.demo.admin;
 
 import com.miun.martinclass.demo.OrderInfo.service.CarteService;
+import com.miun.martinclass.demo.blog.entity.BlogEntry;
+import com.miun.martinclass.demo.blog.service.BlogService;
 import com.miun.martinclass.demo.menu.entity.CarteMenu;
 import com.miun.martinclass.demo.menu.entity.DailyMenu;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
@@ -9,8 +11,12 @@ import jakarta.annotation.PostConstruct;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.Part;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.util.Base64;
 import java.util.List;
 
 @Named("adminBean")
@@ -23,22 +29,30 @@ public class AdminBean implements Serializable {
     @Inject
     private CarteService carteService;
 
+    @Inject
+    private BlogService blogService;
+
 
     private List<MenuItem> menuItems;
     private List<DailyMenu> dailyMenus;
     private List<CarteMenu> carteMenus;
+    private List<BlogEntry> blogEntries;
 
     private MenuItem selectedMenuItem;
     private DailyMenu selectedDailyMenu;
     private CarteMenu selectedCarteMenu;
+    private BlogEntry selectedBlogEntry;
 
     private MenuItem newMenuItem = new MenuItem();
     private DailyMenu newDailyMenu = new DailyMenu();
     private CarteMenu newCarteMenu = new CarteMenu();
+    private BlogEntry newBlogEntry = new BlogEntry();
+    private Part uploadedPicture;
 
     private Long selectedMenuItemId;
     private Long selectedDailyMenuId;
     private Long selectedCarteMenuId;
+    private Long selectedBlogEntryId;
 
     @PostConstruct
     public void init() {
@@ -49,6 +63,7 @@ public class AdminBean implements Serializable {
         menuItems = menuService.getAllMenuItems();
         dailyMenus = menuService.getAllDailyMenus();
         carteMenus = carteService.getAllCarteMenus();
+        blogEntries = blogService.getAllBlogEntries();
     }
 
     public void addMenuItem() {
@@ -130,10 +145,46 @@ public class AdminBean implements Serializable {
         reloadData();
     }
 
+    public Part getUploadedPicture() {
+        return uploadedPicture;
+    }
+
+    public void setUploadedPicture(Part picture) {
+        this.uploadedPicture = picture;
+    }
+
+    public void addBlogEntry() {
+        //https://stackoverflow.com/questions/27677397/how-to-upload-file-using-jsf-2-2-hinputfile-where-is-the-saved-file
+        try (InputStream input = uploadedPicture.getInputStream()) {
+            newBlogEntry.setPicture(input.readAllBytes());
+        }
+        catch (IOException e) {
+            // Show faces message?
+        }
+        blogService.saveBlogEntry(newBlogEntry);
+        newBlogEntry = new BlogEntry();
+        reloadData();
+    }
+
+    public void removeBlogEntry(BlogEntry entry) {
+        blogService.deleteBlogEntryById(entry.getId());
+        reloadData();
+    }
+    public String getPictureAsBase64(byte[] picture) {
+        if (picture == null || picture.length == 0) {
+            return ""; // optionally return a placeholder image
+        }
+        return Base64.getEncoder().encodeToString(picture);
+    }
+
     // Collections
     public List<MenuItem> getMenuItems() { return menuItems; }
     public List<DailyMenu> getDailyMenus() { return dailyMenus; }
     public List<CarteMenu> getCarteMenus() { return carteMenus; }
+    public List<BlogEntry> getBlogEntries() {
+        return blogEntries;
+    }
+
 
     // New objects (for creating new items)
     public MenuItem getNewMenuItem() { return newMenuItem; }
@@ -149,6 +200,13 @@ public class AdminBean implements Serializable {
     public CarteMenu getNewCarteMenu() { return newCarteMenu; }
     public void setNewCarteMenu(CarteMenu newCarteMenu) {
         this.newCarteMenu = newCarteMenu;
+    }
+
+    public BlogEntry getNewBlogEntry() {
+        return newBlogEntry;
+    }
+    public void setNewBlogEntry(BlogEntry newBlogEntry) {
+        this.newBlogEntry = newBlogEntry;
     }
 
     // Selected IDs (for dropdowns or selects)
@@ -167,6 +225,13 @@ public class AdminBean implements Serializable {
         this.selectedCarteMenuId = selectedCarteMenuId;
     }
 
+    public Long getSelectedBlogEntryId() {
+        return selectedBlogEntryId;
+    }
+    public void setSelectedBlogEntryId(Long selectedBlogEntryId) {
+        this.selectedBlogEntryId = selectedBlogEntryId;
+    }
+
     // Selected objects (if used in XHTML)
     public MenuItem getSelectedMenuItem() { return selectedMenuItem; }
     public void setSelectedMenuItem(MenuItem selectedMenuItem) {
@@ -181,5 +246,12 @@ public class AdminBean implements Serializable {
     public CarteMenu getSelectedCarteMenu() { return selectedCarteMenu; }
     public void setSelectedCarteMenu(CarteMenu selectedCarteMenu) {
         this.selectedCarteMenu = selectedCarteMenu;
+    }
+
+    public BlogEntry getSelectedBlogEntry() {
+        return selectedBlogEntry;
+    }
+    public void setSelectedBlogEntry(BlogEntry selectedBlogEntry) {
+        this.selectedBlogEntry = selectedBlogEntry;
     }
 }
