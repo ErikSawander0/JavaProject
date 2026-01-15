@@ -38,7 +38,31 @@ h2 {
     padding-bottom: 8px;
     font-weight: normal;
 }
+.navbar {
+    width: 100%;
+    padding: 15px 0;
+    background: white;
+    border-top: 1px solid #ddd6cf;
+    border-bottom: 1px solid #ddd6cf;
+    text-align: center;
+    margin-bottom: 40px;
+}
 
+.nav-links {
+    display: inline-flex;
+    gap: 35px;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: #6a6057;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav-links a:hover {
+    color: #b1966a;
+}
 h3 {
     color: #6a6057;
     margin: 30px 0 15px;

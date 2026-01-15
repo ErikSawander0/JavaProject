@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<h:head>
+    <title>Admin – Schemaläggning</title>
+    <h:outputStylesheet library="css" name="menu-admin.css"/>
+</h:head>
+
+<h:body>
+
+    <div class="admin-container">
+
+        <h1>Admin – Schemaläggning</h1>
+
+        <!-- Navigation -->
+        <div class="admin-nav">
+            <h:link value="← Menyhantering" outcome="menu-admin" styleClass="nav-link"/>
+        </div>
+
+        <h:messages globalOnly="true" styleClass="error-messages"/>
+
+        <!-- ========================= -->
+        <!--      EMPLOYEES LIST       -->
+        <!-- ========================= -->
+        <h2>Anställda</h2>
+
+        <h:form id="employeesForm">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Användarnamn</th>
+                    <th>Åtgärder</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <ui:repeat value="#{schedulingAdminBean.employees}" var="emp">
+                    <tr>
+                        <td>#{emp.name}</td>
+                        <td>#{emp.username}</td>
+                        <td>
+                            <h:commandButton value="Ta bort"
+                                             action="#{schedulingAdminBean.removeEmployee(emp)}"
+                                             styleClass="danger-btn"
+                                             onclick="return confirm('Är du säker? Alla pass för denna anställd tas också bort.');">
+                                <f:ajax execute="@this" render="@form :shiftsForm :addShiftForm"/>
+                            </h:commandButton>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+        </h:form>
+
+
+        <!-- ========================= -->
+        <!--   ADD EMPLOYEE FORM       -->
+        <!-- ========================= -->
+        <h3>Lägg till anställd</h3>
+
+        <h:form styleClass="form-card" id="addEmployeeForm">
+
+            <div class="form-row">
+                <label>Namn:</label>
+                <h:inputText value="#{schedulingAdminBean.newEmployee.name}" required="true"/>
+            </div>
+
+            <div class="form-row">
+                <label>Användarnamn:</label>
+                <h:inputText value="#{schedulingAdminBean.newEmployee.username}" required="true"/>
+            </div>
+
+            <div class="form-row">
+                <label>Lösenord:</label>
+                <h:inputSecret value="#{schedulingAdminBean.newEmployee.password}" required="true"/>
+            </div>
+
+            <div class="form-row center">
+                <h:commandButton value="Lägg till"
+                                 action="#{schedulingAdminBean.addEmployee}"
+                                 styleClass="primary-btn">
+                    <f:ajax execute="@form" render="@form :employeesForm :addShiftForm" resetValues="true"/>
+                </h:commandButton>
+            </div>
+
+        </h:form>
+
+
+        <!-- ========================= -->
+        <!--      SHIFTS LIST          -->
+        <!-- ========================= -->
+        <h2>Arbetspass</h2>
+
+        <!-- Filter -->
+        <h:form styleClass="form-inline" id="filterForm">
+            <label>Filtrera på datum:</label>
+            <h:inputText type="date" value="#{schedulingAdminBean.filterDate}">
+                <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+            </h:inputText>
+
+            <label>Anställd:</label>
+            <h:selectOneMenu value="#{schedulingAdminBean.filterEmployeeId}">
+                <f:selectItem itemLabel="-- Alla --" itemValue="#{null}" noSelectionOption="true"/>
+                <f:selectItems value="#{schedulingAdminBean.employees}" var="e"
+                               itemValue="#{e.id}" itemLabel="#{e.name}"/>
+            </h:selectOneMenu>
+
+            <h:commandButton value="Filtrera"
+                             action="#{schedulingAdminBean.applyFilter}"
+                             styleClass="secondary-btn">
+                <f:ajax execute="@form" render=":shiftsForm"/>
+            </h:commandButton>
+
+            <h:commandButton value="Rensa"
+                             action="#{schedulingAdminBean.clearFilter}"
+                             styleClass="secondary-btn">
+                <f:ajax execute="@this" render="@form :shiftsForm"/>
+            </h:commandButton>
+        </h:form>
+
+        <h:form id="shiftsForm">
+            <table class="admin-table">
+                <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Typ</th>
+                    <th>Anställd</th>
+                    <th>Åtgärder</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <ui:repeat value="#{schedulingAdminBean.shifts}" var="shift">
+                    <tr>
+                        <td>#{shift.date}</td>
+                        <td>#{schedulingAdminBean.getShiftTypeLabel(shift.shiftType)}</td>
+                        <td>#{schedulingAdminBean.getEmployeeName(shift.employeeId)}</td>
+                        <td>
+                            <h:commandButton value="Ta bort"
+                                             action="#{schedulingAdminBean.removeShift(shift)}"
+                                             styleClass="danger-btn">
+                                <f:ajax execute="@this" render="@form"/>
+                            </h:commandButton>
+                        </td>
+                    </tr>
+                </ui:repeat>
+                </tbody>
+            </table>
+        </h:form>
+
+
+        <!-- ========================= -->
+        <!--   ADD SHIFT FORM          -->
+        <!-- ========================= -->
+        <h3>Lägg till arbetspass</h3>
+
+        <h:form styleClass="form-card" id="addShiftForm">
+
+            <div class="form-row">
+                <label>Anställd:</label>
+                <h:selectOneMenu value="#{schedulingAdminBean.selectedEmployeeId}">
+                    <f:selectItem itemLabel="-- Välj --" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItems value="#{schedulingAdminBean.employees}" var="e"
+                                   itemValue="#{e.id}" itemLabel="#{e.name}"/>
+                </h:selectOneMenu>
+            </div>
+
+            <div class="form-row">
+                <label>Datum:</label>
+                <h:inputText type="date" value="#{schedulingAdminBean.newShift.date}">
+                    <f:convertDateTime type="localDate" pattern="yyyy-MM-dd"/>
+                </h:inputText>
+            </div>
+
+            <div class="form-row">
+                <label>Typ av pass:</label>
+                <h:selectOneMenu value="#{schedulingAdminBean.newShift.shiftType}">
+                    <f:selectItem itemLabel="-- Välj --" itemValue="#{null}" noSelectionOption="true"/>
+                    <f:selectItem itemLabel="Eftermiddag" itemValue="AFTERNOON"/>
+                    <f:selectItem itemLabel="Natt" itemValue="NIGHT"/>
+                </h:selectOneMenu>
+            </div>
+
+            <div class="form-row center">
+                <h:commandButton value="Lägg till"
+                                 action="#{schedulingAdminBean.addShift}"
+                                 styleClass="primary-btn">
+                    <f:ajax execute="@form" render="@form :shiftsForm" resetValues="true"/>
+                </h:commandButton>
+            </div>
+
+        </h:form>
+
+    </div>
+
+</h:body>
+</html>

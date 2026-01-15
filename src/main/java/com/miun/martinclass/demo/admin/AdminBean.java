@@ -3,6 +3,7 @@ package com.miun.martinclass.demo.admin;
 import com.miun.martinclass.demo.OrderInfo.service.CarteService;
 import com.miun.martinclass.demo.blog.entity.BlogEntry;
 import com.miun.martinclass.demo.blog.service.BlogService;
+import com.miun.martinclass.demo.menu.entity.CarteAtributes;
 import com.miun.martinclass.demo.menu.entity.CarteMenu;
 import com.miun.martinclass.demo.menu.entity.DailyMenu;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
@@ -18,7 +19,8 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Base64;
 import java.util.List;
-
+import jakarta.faces.context.FacesContext;
+import java.util.Map;
 @Named("adminBean")
 @ViewScoped
 public class AdminBean implements Serializable {
@@ -54,9 +56,71 @@ public class AdminBean implements Serializable {
     private Long selectedCarteMenuId;
     private Long selectedBlogEntryId;
 
+    private CarteAtributes newCarteAttributes = new CarteAtributes();
+    private Long selectedMenuItemIdForCarte;
+
     @PostConstruct
     public void init() {
         reloadData();
+    }
+
+    public void removeMenuItemFromDailyMenuById() {
+        System.out.println("=== removeMenuItemFromDailyMenuById called ===");
+        System.out.println("selectedDailyMenuId: " + selectedDailyMenuId);
+        System.out.println("selectedMenuItemId: " + selectedMenuItemId);
+
+        if (selectedDailyMenuId != null && selectedMenuItemId != null) {
+            System.out.println("Calling service method...");
+            menuService.removeItemFromDailyMenu(selectedDailyMenuId, selectedMenuItemId);
+            reloadData();
+            System.out.println("Done!");
+        } else {
+            System.out.println("One or both IDs are null - nothing removed");
+        }
+    }
+    private MenuItem editingMenuItem;
+
+    public void startEditMenuItem(MenuItem item) {
+        this.editingMenuItem = item;
+    }
+
+    public void cancelEditMenuItem() {
+        this.editingMenuItem = null;
+    }
+
+    public void saveEditMenuItem() {
+        menuService.updateMenuItem(editingMenuItem);
+        if (editingMenuItem.getCarteAtributes() != null) {
+            carteService.saveCarteAttributes(editingMenuItem.getCarteAtributes());
+        }
+        this.editingMenuItem = null;
+        reloadData();
+    }
+
+    public boolean isEditing(MenuItem item) {
+        return editingMenuItem != null && editingMenuItem.getId().equals(item.getId());
+    }
+
+    public MenuItem getEditingMenuItem() {
+        return editingMenuItem;
+    }
+
+    public void setEditingMenuItem(MenuItem editingMenuItem) {
+        this.editingMenuItem = editingMenuItem;
+    }
+    public void removeMenuItemFromCarteMenuById() {
+        System.out.println("=== removeMenuItemFromCarteMenuById called ===");
+        System.out.println("selectedCarteMenuId: " + selectedCarteMenuId);
+        System.out.println("selectedMenuItemId: " + selectedMenuItemId);
+
+        if (selectedCarteMenuId != null && selectedMenuItemId != null) {
+            System.out.println("Calling service method...");
+            carteService.removeItemFromCarteMenu(selectedCarteMenuId, selectedMenuItemId);
+            reloadData();
+            System.out.println("Done!");
+        } else {
+            System.out.println("One or both IDs are null - nothing removed");
+        }
     }
 
     private void reloadData() {
@@ -78,10 +142,10 @@ public class AdminBean implements Serializable {
     }
 
     public void removeMenuItem(MenuItem item) {
+        carteService.deleteCarteAttributesByMenuItem(item.getId());
         menuService.deleteMenuItem(item.getId());
         reloadData();
     }
-
     public void addDailyMenu() {
         menuService.createDailyMenu(newDailyMenu);
         System.out.println("Inserting with date " + newDailyMenu.getDate());
@@ -157,8 +221,7 @@ public class AdminBean implements Serializable {
         //https://stackoverflow.com/questions/27677397/how-to-upload-file-using-jsf-2-2-hinputfile-where-is-the-saved-file
         try (InputStream input = uploadedPicture.getInputStream()) {
             newBlogEntry.setPicture(input.readAllBytes());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             // Show faces message?
         }
         blogService.saveBlogEntry(newBlogEntry);
@@ -170,6 +233,7 @@ public class AdminBean implements Serializable {
         blogService.deleteBlogEntryById(entry.getId());
         reloadData();
     }
+
     public String getPictureAsBase64(byte[] picture) {
         if (picture == null || picture.length == 0) {
             return ""; // optionally return a placeholder image
@@ -178,26 +242,44 @@ public class AdminBean implements Serializable {
     }
 
     // Collections
-    public List<MenuItem> getMenuItems() { return menuItems; }
-    public List<DailyMenu> getDailyMenus() { return dailyMenus; }
-    public List<CarteMenu> getCarteMenus() { return carteMenus; }
+    public List<MenuItem> getMenuItems() {
+        return menuItems;
+    }
+
+    public List<DailyMenu> getDailyMenus() {
+        return dailyMenus;
+    }
+
+    public List<CarteMenu> getCarteMenus() {
+        return carteMenus;
+    }
+
     public List<BlogEntry> getBlogEntries() {
         return blogEntries;
     }
 
 
     // New objects (for creating new items)
-    public MenuItem getNewMenuItem() { return newMenuItem; }
+    public MenuItem getNewMenuItem() {
+        return newMenuItem;
+    }
+
     public void setNewMenuItem(MenuItem newMenuItem) {
         this.newMenuItem = newMenuItem;
     }
 
-    public DailyMenu getNewDailyMenu() { return newDailyMenu; }
+    public DailyMenu getNewDailyMenu() {
+        return newDailyMenu;
+    }
+
     public void setNewDailyMenu(DailyMenu newDailyMenu) {
         this.newDailyMenu = newDailyMenu;
     }
 
-    public CarteMenu getNewCarteMenu() { return newCarteMenu; }
+    public CarteMenu getNewCarteMenu() {
+        return newCarteMenu;
+    }
+
     public void setNewCarteMenu(CarteMenu newCarteMenu) {
         this.newCarteMenu = newCarteMenu;
     }
@@ -205,22 +287,32 @@ public class AdminBean implements Serializable {
     public BlogEntry getNewBlogEntry() {
         return newBlogEntry;
     }
+
     public void setNewBlogEntry(BlogEntry newBlogEntry) {
         this.newBlogEntry = newBlogEntry;
     }
 
     // Selected IDs (for dropdowns or selects)
-    public Long getSelectedMenuItemId() { return selectedMenuItemId; }
+    public Long getSelectedMenuItemId() {
+        return selectedMenuItemId;
+    }
+
     public void setSelectedMenuItemId(Long selectedMenuItemId) {
         this.selectedMenuItemId = selectedMenuItemId;
     }
 
-    public Long getSelectedDailyMenuId() { return selectedDailyMenuId; }
+    public Long getSelectedDailyMenuId() {
+        return selectedDailyMenuId;
+    }
+
     public void setSelectedDailyMenuId(Long selectedDailyMenuId) {
         this.selectedDailyMenuId = selectedDailyMenuId;
     }
 
-    public Long getSelectedCarteMenuId() { return selectedCarteMenuId; }
+    public Long getSelectedCarteMenuId() {
+        return selectedCarteMenuId;
+    }
+
     public void setSelectedCarteMenuId(Long selectedCarteMenuId) {
         this.selectedCarteMenuId = selectedCarteMenuId;
     }
@@ -228,22 +320,32 @@ public class AdminBean implements Serializable {
     public Long getSelectedBlogEntryId() {
         return selectedBlogEntryId;
     }
+
     public void setSelectedBlogEntryId(Long selectedBlogEntryId) {
         this.selectedBlogEntryId = selectedBlogEntryId;
     }
 
     // Selected objects (if used in XHTML)
-    public MenuItem getSelectedMenuItem() { return selectedMenuItem; }
+    public MenuItem getSelectedMenuItem() {
+        return selectedMenuItem;
+    }
+
     public void setSelectedMenuItem(MenuItem selectedMenuItem) {
         this.selectedMenuItem = selectedMenuItem;
     }
 
-    public DailyMenu getSelectedDailyMenu() { return selectedDailyMenu; }
+    public DailyMenu getSelectedDailyMenu() {
+        return selectedDailyMenu;
+    }
+
     public void setSelectedDailyMenu(DailyMenu selectedDailyMenu) {
         this.selectedDailyMenu = selectedDailyMenu;
     }
 
-    public CarteMenu getSelectedCarteMenu() { return selectedCarteMenu; }
+    public CarteMenu getSelectedCarteMenu() {
+        return selectedCarteMenu;
+    }
+
     public void setSelectedCarteMenu(CarteMenu selectedCarteMenu) {
         this.selectedCarteMenu = selectedCarteMenu;
     }
@@ -251,7 +353,54 @@ public class AdminBean implements Serializable {
     public BlogEntry getSelectedBlogEntry() {
         return selectedBlogEntry;
     }
+
     public void setSelectedBlogEntry(BlogEntry selectedBlogEntry) {
         this.selectedBlogEntry = selectedBlogEntry;
+    }
+
+    public List<MenuItem> getCarteEligibleMenuItems() {
+        return carteService.getMenuItemsWithCarteAttributes();
+    }
+
+    public List<MenuItem> getMenuItemsWithoutCarteAttributes() {
+        return carteService.getMenuItemsWithoutCarteAttributes();
+    }
+
+    public boolean hasCarteAttributes(MenuItem item) {
+        return item.getCarteAtributes() != null;
+    }
+
+    public void addCarteAttributes() {
+        if (selectedMenuItemIdForCarte != null) {
+            MenuItem item = carteService.findMenuItemById(selectedMenuItemIdForCarte);
+            newCarteAttributes.setMenuItem(item);
+            carteService.saveCarteAttributes(newCarteAttributes);
+            newCarteAttributes = new CarteAtributes();
+            selectedMenuItemIdForCarte = null;
+            reloadData();
+        }
+    }
+
+
+    public void setActiveCarteMenu(CarteMenu menu) {
+        carteService.setActiveMenu(menu.getId());
+        reloadData();
+    }
+
+    // Getters/setters
+    public CarteAtributes getNewCarteAttributes() {
+        return newCarteAttributes;
+    }
+
+    public void setNewCarteAttributes(CarteAtributes attr) {
+        this.newCarteAttributes = attr;
+    }
+
+    public Long getSelectedMenuItemIdForCarte() {
+        return selectedMenuItemIdForCarte;
+    }
+
+    public void setSelectedMenuItemIdForCarte(Long id) {
+        this.selectedMenuItemIdForCarte = id;
     }
 }

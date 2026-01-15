@@ -155,23 +155,31 @@ public class MenuService {
     public void removeItemFromDailyMenu(Long dailyMenuId, Long menuItemId) {
         DailyMenu dailyMenu = em.find(DailyMenu.class, dailyMenuId);
         MenuItem menuItem = em.find(MenuItem.class, menuItemId);
-
-        if(dailyMenu != null && menuItem != null) {
+        System.out.println(dailyMenuId);
+        System.out.println(menuItemId);
+        System.out.println(dailyMenu);
+        System.out.println(menuItem);
+        System.out.println("hello");
+        if (dailyMenu != null && menuItem != null) {
+            System.out.println("WE ARE HERE ERIK WE GOT TO THIS PART");
             dailyMenu.getMenuItems().remove(menuItem);
             em.merge(dailyMenu);
+            em.flush();  // Force the SQL to execute now
         }
+        System.out.println("IT DID NOT WORK");
     }
+
     public List<CarteMenuItem> getActiveCarteMenuItems() {
         return em.createQuery("""
-        SELECT new com.miun.martinclass.demo.OrderInfo.entity.CarteMenuItem(
-            m.id, m.name, m.description, m.price, m.isVegan, m.isGlutenFree, m.allergens,
-            c.id, c.activeTime, c.waitingTime, c.isMeat,
-            c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
-        )
-        FROM CarteMenu cm
-        JOIN cm.menuItems m
-        LEFT JOIN CarteAtributes c
-        WHERE cm.active = TRUE
-    """, CarteMenuItem.class).getResultList();
+    SELECT new com.miun.martinclass.demo.OrderInfo.entity.CarteMenuItem(
+        m.id, m.name, m.description, m.price, m.isVegan, m.isGlutenFree, m.allergens,
+        c.id, c.activeTime, c.waitingTime, c.isMeat,
+        c.isDessert, c.canSubstitute, c.isAppetizer, c.isHuvud
+    )
+    FROM CarteMenu cm
+    JOIN cm.menuItems m
+    LEFT JOIN m.carteAtributes c
+    WHERE cm.active = TRUE
+""", CarteMenuItem.class).getResultList();
     }
 }

@@ -8,6 +8,7 @@ import jakarta.ws.rs.core.Response;
 
 @Path("/getTodaysBookings")
 @Produces(MediaType.APPLICATION_JSON)
+
 public class BookingsApi {
 
     @Inject

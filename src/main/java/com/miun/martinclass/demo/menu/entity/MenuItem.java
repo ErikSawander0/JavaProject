@@ -91,5 +91,16 @@ public class MenuItem {
     public void setAllergens(String allergens) {
         this.allergens = allergens;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MenuItem menuItem = (MenuItem) o;
+        return id != null && id.equals(menuItem.id);
+    }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

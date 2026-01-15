@@ -2,6 +2,7 @@ package com.miun.martinclass.demo.OrderInfo.service;
 import com.miun.martinclass.demo.OrderInfo.entity.CarteMenuItem;
 import com.miun.martinclass.demo.OrderInfo.entity.OrderGroup;
 import com.miun.martinclass.demo.OrderInfo.entity.SimpleOrder;
+import com.miun.martinclass.demo.menu.entity.CarteAtributes;
 import com.miun.martinclass.demo.menu.entity.CarteMenu;
 import com.miun.martinclass.demo.menu.entity.MenuItem;
 import jakarta.ejb.Stateless;
@@ -120,6 +121,7 @@ public class CarteService {
         if (carteMenu != null && menuItem != null) {
             carteMenu.getMenuItems().remove(menuItem);
             em.merge(carteMenu);
+            em.flush();
         }
     }
 
@@ -132,6 +134,44 @@ public class CarteService {
         }
     }
 
+    public void setActiveMenu(Long menuId) {
+        em.createQuery("UPDATE CarteMenu c SET c.active = false").executeUpdate();
+        em.createQuery("UPDATE CarteMenu c SET c.active = true WHERE c.id = :id")
+                .setParameter("id", menuId)
+                .executeUpdate();
+    }
+    public List<MenuItem> getMenuItemsWithoutCarteAttributes() {
+        return em.createQuery("""
+        SELECT m FROM MenuItem m 
+        WHERE NOT EXISTS (
+            SELECT c FROM CarteAtributes c WHERE c.menuItem = m
+        )
+        """, MenuItem.class).getResultList();
+    }
 
+    public void deleteCarteAttributesByMenuItem(Long menuItemId) {
+        em.createQuery("DELETE FROM CarteAtributes c WHERE c.menuItem.id = :id")
+                .setParameter("id", menuItemId)
+                .executeUpdate();
+    }
+
+    public List<MenuItem> getMenuItemsWithCarteAttributes() {
+        return em.createQuery("""
+        SELECT m FROM MenuItem m 
+        WHERE EXISTS (
+            SELECT c FROM CarteAtributes c WHERE c.menuItem = m
+        )
+        """, MenuItem.class).getResultList();
+    }
+    public void saveCarteAttributes(CarteAtributes attr) {
+        if (attr.getId() == null) {
+            em.persist(attr);
+        } else {
+            em.merge(attr);
+        }
+    }
+    public MenuItem findMenuItemById(Long id) {
+        return em.find(MenuItem.class, id);
+    }
 
 }

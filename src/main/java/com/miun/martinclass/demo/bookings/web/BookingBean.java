@@ -1,6 +1,7 @@
 package com.miun.martinclass.demo.bookings.web;
 
 import com.miun.martinclass.demo.bookings.service.AvailableBookingService;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Inject;
@@ -13,9 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Named
-@SessionScoped
+@ViewScoped
 public class BookingBean implements Serializable {
 
+    @Inject
     private AvailableBookingService availableBookingService;
 
     private int partySize;
